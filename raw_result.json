@@ -1,0 +1,2666 @@
+{
+  "nearByTrafficLineStop": [
+    {
+      "isParkLine": 0,
+      "lineId": "10469",
+      "lineName": "981路",
+      "stopId": "129679",
+      "startStopName": "其昌栈渡口",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:50",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A06328D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A05638D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A56089D无障碍"
+          }
+        ],
+        "lineId": "10469",
+        "lineName": "981路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "前滩大道耀体路",
+      "sai": {
+        "nextBusDistance": "2373",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "4",
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A39937D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "9",
+        "nextLicensePlate": "沪A53765D无障碍",
+        "currentBusDistance": "548"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10192",
+      "lineName": "338路",
+      "stopId": "61240",
+      "startStopName": "东昌路渡口",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "00:15",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "不在运营时间",
+        "lineId": "10192",
+        "lineName": "338路",
+        "scheduleCode": -1,
+        "scheduleMsgShort": "预计00:15从首站发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "04:15",
+      "endStopName": "芦恒路枢纽站",
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "097300",
+      "lineName": "973路",
+      "stopId": "17",
+      "startStopName": "蓝村路南泉路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A-09684D"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A-09294D"
+          },
+          {
+            "countdown": "剩余41分钟",
+            "time": "18:30",
+            "vehicle": "沪A-36516D"
+          }
+        ],
+        "lineId": "097300",
+        "lineName": "973路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "上海南站(南广场)",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 7,
+        "currentBusArriveTime": "14",
+        "currentLicensePlate": "沪A-30562D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "currentBusDistance": "3905"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10450",
+      "lineName": "955路",
+      "stopId": "138319",
+      "startStopName": "陕西南路永嘉路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:25",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "暂无实时数据",
+        "lineId": "10450",
+        "lineName": "955路",
+        "scheduleCode": 0,
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:46",
+      "endStopName": "芦恒路枢纽站",
+      "sai": {
+        "nextBusDistance": "1624",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "3",
+        "currentBusArriveTime": "4",
+        "currentLicensePlate": "沪A38698D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "8",
+        "nextLicensePlate": "沪A33785D",
+        "currentBusDistance": "621"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "210604",
+      "lineName": "浦东98路",
+      "stopId": "124079",
+      "startStopName": "长清北路枢纽站",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余6分钟",
+            "time": "17:55",
+            "vehicle": "沪A35289D"
+          },
+          {
+            "countdown": "剩余16分钟",
+            "time": "18:05",
+            "vehicle": "沪A31553D"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A36163D"
+          }
+        ],
+        "lineId": "210604",
+        "lineName": "浦东98路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "6分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:05",
+      "endStopName": "天雄路周祝公路",
+      "sai": {
+        "nextBusDistance": "2781",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "6",
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A31682D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "nextBusArriveTime": "14",
+        "nextLicensePlate": "沪A35237D",
+        "currentBusDistance": "525"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "062700",
+      "lineName": "456路",
+      "stopId": "9",
+      "startStopName": "上海体育馆",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A-33363D"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A-51789D"
+          },
+          {
+            "countdown": "剩余36分钟",
+            "time": "18:25",
+            "vehicle": "沪A-01021D"
+          }
+        ],
+        "lineId": "062700",
+        "lineName": "456路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "长清路永泰路",
+      "sai": {
+        "nextBusDistance": "8617",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 5,
+        "nextBusStopCount": "7",
+        "currentBusArriveTime": "12",
+        "currentLicensePlate": "沪A-30305D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "27",
+        "nextLicensePlate": "沪A-52366D无障碍",
+        "currentBusDistance": "3230"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10222",
+      "lineName": "576路",
+      "stopId": "138286",
+      "startStopName": "曲阳路玉田路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A03832F无障碍"
+          },
+          {
+            "countdown": "剩余9分钟",
+            "time": "17:58",
+            "vehicle": "沪A50393D"
+          },
+          {
+            "countdown": "剩余17分钟",
+            "time": "18:06",
+            "vehicle": "沪A31301D无障碍"
+          }
+        ],
+        "lineId": "10222",
+        "lineName": "576路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:00",
+      "endStopName": "芦恒路枢纽站",
+      "sai": {
+        "nextBusDistance": "1310",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "2",
+        "currentBusArriveTime": "3",
+        "currentLicensePlate": "沪A02051D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "5",
+        "nextLicensePlate": "沪A05620D无障碍",
+        "currentBusDistance": "992"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10335",
+      "lineName": "782路",
+      "stopId": "122515",
+      "startStopName": "普安路延安东路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A09253F无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A02167A无障碍"
+          }
+        ],
+        "lineId": "10335",
+        "lineName": "782路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:15",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "nextBusDistance": "5841",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 6,
+        "nextBusStopCount": "9",
+        "currentBusArriveTime": "17",
+        "currentLicensePlate": "沪A07256F无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "24",
+        "nextLicensePlate": "沪A09312F无障碍",
+        "currentBusDistance": "3786"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "993664",
+      "lineName": "浦东97路",
+      "stopId": "8",
+      "startStopName": "通耀路耀龙路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497626",
+        "lat": "31.161172"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A-38373D"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A-33687D"
+          },
+          {
+            "countdown": "剩余36分钟",
+            "time": "18:25",
+            "vehicle": "沪A-38286D"
+          }
+        ],
+        "lineId": "993664",
+        "lineName": "浦东97路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "天雄路周祝公路",
+      "sai": {
+        "nextBusDistance": "4004",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "nextBusStopCount": "6",
+        "currentBusArriveTime": "10",
+        "currentLicensePlate": "沪A-36717D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "19",
+        "nextLicensePlate": "沪A-33094D",
+        "currentBusDistance": "2243"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10469",
+      "lineName": "981路",
+      "stopId": "129653",
+      "startStopName": "前滩大道耀体路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.499368",
+        "lat": "31.156783"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A04998D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A31822D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A04997D无障碍"
+          }
+        ],
+        "lineId": "10469",
+        "lineName": "981路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "其昌栈渡口",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "currentBusArriveTime": "9",
+        "currentLicensePlate": "沪A56520D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "2207"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10468",
+      "lineName": "980路",
+      "stopId": "687C0003",
+      "startStopName": "云台路杨南路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.499368",
+        "lat": "31.156783"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A00231D无障碍"
+          },
+          {
+            "countdown": "剩余16分钟",
+            "time": "18:05",
+            "vehicle": "沪A36231D无障碍"
+          },
+          {
+            "countdown": "剩余29分钟",
+            "time": "18:18",
+            "vehicle": "沪A36918D无障碍"
+          }
+        ],
+        "lineId": "10468",
+        "lineName": "980路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "人民广场(广东路)",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A51786D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "0"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10335",
+      "lineName": "782路",
+      "stopId": "122500",
+      "startStopName": "海阳路长清路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.499368",
+        "lat": "31.156783"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:10",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A33300D无障碍"
+          },
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A05632A无障碍"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A04184F无障碍"
+          }
+        ],
+        "lineId": "10335",
+        "lineName": "782路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "普安路延安东路",
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "71001",
+      "lineName": "浦东37路",
+      "stopId": "126066",
+      "startStopName": "芦恒路枢纽站",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.499368",
+        "lat": "31.156783"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:15",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余24分钟",
+            "time": "18:13",
+            "vehicle": "沪A15506A无障碍"
+          },
+          {
+            "countdown": "剩余52分钟",
+            "time": "18:41",
+            "vehicle": "沪A11015A无障碍"
+          },
+          {
+            "countdown": "剩余1小时17分钟",
+            "time": "19:06",
+            "vehicle": "沪A12507A无障碍"
+          }
+        ],
+        "lineId": "71001",
+        "lineName": "浦东37路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "24分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:30",
+      "endStopName": "华夏西路云台路（东方南院）",
+      "sai": {
+        "nextBusDistance": "7384",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 16,
+        "nextBusStopCount": "16",
+        "currentBusArriveTime": "25",
+        "currentLicensePlate": "沪A15896A无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "26",
+        "nextLicensePlate": "沪A15506A无障碍",
+        "currentBusDistance": "7005"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10469",
+      "lineName": "981路",
+      "stopId": "129654",
+      "startStopName": "前滩大道耀体路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A04998D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A31822D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A04997D无障碍"
+          }
+        ],
+        "lineId": "10469",
+        "lineName": "981路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "其昌栈渡口",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 5,
+        "currentBusArriveTime": "13",
+        "currentLicensePlate": "沪A56520D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "2844"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10192",
+      "lineName": "338路",
+      "stopId": "61202",
+      "startStopName": "芦恒路枢纽站",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "23:05",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "不在运营时间",
+        "lineId": "10192",
+        "lineName": "338路",
+        "scheduleCode": -1,
+        "scheduleMsgShort": "预计23:05从首站发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "03:05",
+      "endStopName": "东昌路渡口",
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10067",
+      "lineName": "83路",
+      "stopId": "123882",
+      "startStopName": "三林世博家园",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A55355D无障碍"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A00806D无障碍"
+          }
+        ],
+        "lineId": "10067",
+        "lineName": "83路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "12分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:30",
+      "endStopName": "长清北路枢纽站",
+      "sai": {
+        "nextBusDistance": "5554",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "10",
+        "currentBusArriveTime": "7",
+        "currentLicensePlate": "沪A58803D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "25",
+        "nextLicensePlate": "沪A35116D无障碍",
+        "currentBusDistance": "1467"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "097300",
+      "lineName": "973路",
+      "stopId": "13",
+      "startStopName": "上海南站(南广场)",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A-07475D"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A-36778D"
+          },
+          {
+            "countdown": "剩余51分钟",
+            "time": "18:40",
+            "vehicle": "沪A-36598D"
+          }
+        ],
+        "lineId": "097300",
+        "lineName": "973路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:57",
+      "endStopName": "蓝村路南泉路",
+      "sai": {
+        "nextBusDistance": "5941",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "8",
+        "currentBusArriveTime": "8",
+        "currentLicensePlate": "沪A-38339D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "24",
+        "nextLicensePlate": "沪A-39671D",
+        "currentBusDistance": "2032"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10450",
+      "lineName": "955路",
+      "stopId": "138339",
+      "startStopName": "芦恒路枢纽站",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "04:55",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A33719D"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A33731D"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A31055D"
+          }
+        ],
+        "lineId": "10450",
+        "lineName": "955路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:25",
+      "endStopName": "陕西南路永嘉路",
+      "sai": {
+        "nextBusDistance": "1954",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "3",
+        "currentBusArriveTime": "3",
+        "currentLicensePlate": "沪A55113D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "nextBusArriveTime": "10",
+        "nextLicensePlate": "沪A33676D",
+        "currentBusDistance": "674"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "210604",
+      "lineName": "浦东98路",
+      "stopId": "124065",
+      "startStopName": "天雄路周祝公路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "04:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余13分钟",
+            "time": "18:02",
+            "vehicle": "沪A36183D"
+          },
+          {
+            "countdown": "剩余30分钟",
+            "time": "18:19",
+            "vehicle": "沪A35321D"
+          },
+          {
+            "countdown": "剩余47分钟",
+            "time": "18:36",
+            "vehicle": "沪A31702D"
+          }
+        ],
+        "lineId": "210604",
+        "lineName": "浦东98路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "13分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:30",
+      "endStopName": "长清北路枢纽站",
+      "sai": {
+        "nextBusDistance": "5112",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "9",
+        "currentBusArriveTime": "9",
+        "currentLicensePlate": "沪A35511D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "21",
+        "nextLicensePlate": "沪A30826D",
+        "currentBusDistance": "2015"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10468",
+      "lineName": "980路",
+      "stopId": "6A7B0000",
+      "startStopName": "云台路杨南路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A00231D无障碍"
+          },
+          {
+            "countdown": "剩余16分钟",
+            "time": "18:05",
+            "vehicle": "沪A36231D无障碍"
+          },
+          {
+            "countdown": "剩余29分钟",
+            "time": "18:18",
+            "vehicle": "沪A36918D无障碍"
+          }
+        ],
+        "lineId": "10468",
+        "lineName": "980路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "人民广场(广东路)",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "currentBusArriveTime": "1",
+        "currentLicensePlate": "沪A51786D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "558"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "503000",
+      "lineName": "沪塘专线",
+      "stopId": "42",
+      "startStopName": "塘外",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A-06539D"
+          }
+        ],
+        "lineId": "503000",
+        "lineName": "沪塘专线",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "18:00",
+      "endStopName": "淡水路金陵中路",
+      "sai": {
+        "nextBusDistance": "26703",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 13,
+        "nextBusStopCount": "27",
+        "currentBusArriveTime": "39",
+        "currentLicensePlate": "沪A-35663D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "nextBusArriveTime": "78",
+        "nextLicensePlate": "沪A-36727D",
+        "currentBusDistance": "14074"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "062700",
+      "lineName": "456路",
+      "stopId": "9",
+      "startStopName": "长清路永泰路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余6分钟",
+            "time": "17:55",
+            "vehicle": "沪A-57570D"
+          },
+          {
+            "countdown": "剩余16分钟",
+            "time": "18:05",
+            "vehicle": "沪A-30777D"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A-55058D"
+          }
+        ],
+        "lineId": "062700",
+        "lineName": "456路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "6分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "上海体育馆",
+      "sai": {
+        "nextBusDistance": "2826",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "5",
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A-38697D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "12",
+        "nextLicensePlate": "沪A-31939D无障碍",
+        "currentBusDistance": "807"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10222",
+      "lineName": "576路",
+      "stopId": "138253",
+      "startStopName": "芦恒路枢纽站",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:20",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A32776D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A30996D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A52570D"
+          }
+        ],
+        "lineId": "10222",
+        "lineName": "576路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "曲阳路玉田路",
+      "sai": {
+        "nextBusDistance": "3548",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "6",
+        "currentBusArriveTime": "6",
+        "currentLicensePlate": "沪A37722D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "16",
+        "nextLicensePlate": "沪A06101D无障碍",
+        "currentBusDistance": "1759"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10932",
+      "lineName": "177路",
+      "stopId": "29696",
+      "startStopName": "江龙路浦申路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A39129D无障碍"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A37936D无障碍"
+          },
+          {
+            "countdown": "剩余41分钟",
+            "time": "18:30",
+            "vehicle": "沪A36275D无障碍"
+          }
+        ],
+        "lineId": "10932",
+        "lineName": "177路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "12分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "南码头渡口",
+      "sai": {
+        "nextBusDistance": "3499",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 2,
+        "nextBusStopCount": "5",
+        "currentBusArriveTime": "4",
+        "currentLicensePlate": "沪A37792D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "13",
+        "nextLicensePlate": "沪A39713D无障碍",
+        "currentBusDistance": "1448"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10335",
+      "lineName": "782路",
+      "stopId": "122518",
+      "startStopName": "海阳路长清路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:10",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A33300D无障碍"
+          },
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A05632A无障碍"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A04184F无障碍"
+          }
+        ],
+        "lineId": "10335",
+        "lineName": "782路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "普安路延安东路",
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "993664",
+      "lineName": "浦东97路",
+      "stopId": "23",
+      "startStopName": "天雄路周祝公路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497738",
+        "lat": "31.161354"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A-09342D"
+          },
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A-03498D"
+          },
+          {
+            "countdown": "剩余26分钟",
+            "time": "18:15",
+            "vehicle": "沪A-32791D"
+          }
+        ],
+        "lineId": "993664",
+        "lineName": "浦东97路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "21:00",
+      "endStopName": "通耀路耀龙路",
+      "sai": {
+        "nextBusDistance": "4886",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "nextBusStopCount": "7",
+        "currentBusArriveTime": "13",
+        "currentLicensePlate": "沪A-36719D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "nextBusArriveTime": "21",
+        "nextLicensePlate": "沪A-08671D",
+        "currentBusDistance": "2894"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10469",
+      "lineName": "981路",
+      "stopId": "129680",
+      "startStopName": "其昌栈渡口",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.499263",
+        "lat": "31.156742"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:50",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A06328D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A05638D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A56089D无障碍"
+          }
+        ],
+        "lineId": "10469",
+        "lineName": "981路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "前滩大道耀体路",
+      "sai": {
+        "nextBusDistance": "2968",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 2,
+        "nextBusStopCount": "5",
+        "currentBusArriveTime": "5",
+        "currentLicensePlate": "沪A39937D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "13",
+        "nextLicensePlate": "沪A53765D无障碍",
+        "currentBusDistance": "1144"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10468",
+      "lineName": "980路",
+      "stopId": "687C0001",
+      "startStopName": "人民广场(广东路)",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.499263",
+        "lat": "31.156742"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A04525D无障碍"
+          },
+          {
+            "countdown": "剩余10分钟",
+            "time": "17:59",
+            "vehicle": "沪A04757D无障碍"
+          },
+          {
+            "countdown": "剩余17分钟",
+            "time": "18:06",
+            "vehicle": "沪A39903D无障碍"
+          }
+        ],
+        "lineId": "10468",
+        "lineName": "980路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "云台路杨南路",
+      "sai": {
+        "nextBusDistance": "2621",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "nextBusStopCount": "5",
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A32217D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "12",
+        "nextLicensePlate": "沪A30351D无障碍",
+        "currentBusDistance": "0"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10335",
+      "lineName": "782路",
+      "stopId": "122510",
+      "startStopName": "普安路延安东路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.499263",
+        "lat": "31.156742"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A09253F无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A02167A无障碍"
+          }
+        ],
+        "lineId": "10335",
+        "lineName": "782路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:15",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "nextBusDistance": "4395",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "nextBusStopCount": "7",
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A06736A无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "18",
+        "nextLicensePlate": "沪A07256F无障碍",
+        "currentBusDistance": "0"
+      },
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "71001",
+      "lineName": "浦东37路",
+      "stopId": "126069",
+      "startStopName": "华夏西路云台路（东方南院）",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.499258",
+        "lat": "31.15674"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:55",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余13分钟",
+            "time": "18:02",
+            "vehicle": "沪A12797A无障碍"
+          },
+          {
+            "countdown": "剩余40分钟",
+            "time": "18:29",
+            "vehicle": "沪A15896A无障碍"
+          },
+          {
+            "countdown": "剩余1小时7分钟",
+            "time": "18:56",
+            "vehicle": "沪A15506A无障碍"
+          }
+        ],
+        "lineId": "71001",
+        "lineName": "浦东37路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "13分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:15",
+      "endStopName": "芦恒路枢纽站",
+      "stopName": "海阳路上南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10067",
+      "lineName": "83路",
+      "stopId": "123881",
+      "startStopName": "长清北路枢纽站",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497569",
+        "lat": "31.161337"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A57511D无障碍"
+          },
+          {
+            "countdown": "剩余15分钟",
+            "time": "18:04",
+            "vehicle": "沪A30899D无障碍"
+          },
+          {
+            "countdown": "剩余27分钟",
+            "time": "18:16",
+            "vehicle": "沪A58803D无障碍"
+          }
+        ],
+        "lineId": "10067",
+        "lineName": "83路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "21:00",
+      "endStopName": "三林世博家园",
+      "sai": {
+        "nextBusDistance": "2042",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "nextBusStopCount": "4",
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A36996D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "12",
+        "nextLicensePlate": "沪A06391D无障碍",
+        "currentBusDistance": "0"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10468",
+      "lineName": "980路",
+      "stopId": "6A7B0001",
+      "startStopName": "人民广场(广东路)",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497569",
+        "lat": "31.161337"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余3分钟",
+            "time": "17:52",
+            "vehicle": "沪A04525D无障碍"
+          },
+          {
+            "countdown": "剩余10分钟",
+            "time": "17:59",
+            "vehicle": "沪A04757D无障碍"
+          },
+          {
+            "countdown": "剩余17分钟",
+            "time": "18:06",
+            "vehicle": "沪A39903D无障碍"
+          }
+        ],
+        "lineId": "10468",
+        "lineName": "980路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "3分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "云台路杨南路",
+      "sai": {
+        "nextBusDistance": "6696",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "nextBusStopCount": "11",
+        "currentBusArriveTime": "9",
+        "currentLicensePlate": "沪A30351D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "31",
+        "nextLicensePlate": "沪A56895D无障碍",
+        "currentBusDistance": "2015"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "503000",
+      "lineName": "沪塘专线",
+      "stopId": "5",
+      "startStopName": "淡水路金陵中路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497569",
+        "lat": "31.161337"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:50",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A-36625D"
+          },
+          {
+            "countdown": "剩余56分钟",
+            "time": "18:45",
+            "vehicle": "沪A-36082D"
+          }
+        ],
+        "lineId": "503000",
+        "lineName": "沪塘专线",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "21分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:20",
+      "endStopName": "塘外",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "currentBusArriveTime": "22",
+        "currentLicensePlate": "沪A-36957D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "7832"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10932",
+      "lineName": "177路",
+      "stopId": "29651",
+      "startStopName": "南码头渡口",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.497569",
+        "lat": "31.161337"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A31851D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A37792D无障碍"
+          },
+          {
+            "countdown": "剩余51分钟",
+            "time": "18:40",
+            "vehicle": "沪A39713D无障碍"
+          }
+        ],
+        "lineId": "10932",
+        "lineName": "177路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "12分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "江龙路浦申路",
+      "sai": {
+        "nextBusDistance": "3081",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "nextBusStopCount": "5",
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A37732D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "19",
+        "nextLicensePlate": "沪A35662D无障碍",
+        "currentBusDistance": "0"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "104731",
+      "lineName": "986路区间",
+      "stopId": "116240",
+      "startStopName": "淮海中路思南路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.497569",
+        "lat": "31.161337"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余6分钟",
+            "time": "17:55",
+            "vehicle": "沪A30228D无障碍"
+          },
+          {
+            "countdown": "剩余14分钟",
+            "time": "18:03",
+            "vehicle": "沪A53928D无障碍"
+          }
+        ],
+        "lineId": "104731",
+        "lineName": "986路区间",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "6分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:00",
+      "endStopName": "东泰林路",
+      "sai": {
+        "nextBusDistance": "1610",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "3",
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A35778D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "5",
+        "nextLicensePlate": "沪A59898D无障碍",
+        "currentBusDistance": "214"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "104731",
+      "lineName": "986路区间",
+      "stopId": "116234",
+      "startStopName": "东泰林路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.49772",
+        "lat": "31.161423"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A58669D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A05239D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A55027D无障碍"
+          }
+        ],
+        "lineId": "104731",
+        "lineName": "986路区间",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "淮海中路思南路",
+      "sai": {
+        "nextBusDistance": "2045",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 0,
+        "nextBusStopCount": "3",
+        "currentBusArriveTime": "0",
+        "currentLicensePlate": "沪A04099D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "9",
+        "nextLicensePlate": "沪A30139D无障碍",
+        "currentBusDistance": "0"
+      },
+      "stopName": "上南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60011",
+      "lineName": "浦东80路",
+      "stopId": "131883",
+      "startStopName": "华夏西路云台路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.495887",
+        "lat": "31.156593"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:20",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余14分钟",
+            "time": "18:03",
+            "vehicle": "沪A56755D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A51518D无障碍"
+          },
+          {
+            "countdown": "剩余51分钟",
+            "time": "18:40",
+            "vehicle": "沪A55906D无障碍"
+          }
+        ],
+        "lineId": "60011",
+        "lineName": "浦东80路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "14分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:43",
+      "endStopName": "板泉路新浦路",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "currentBusArriveTime": "12",
+        "currentLicensePlate": "沪A56555D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "currentBusDistance": "3151"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10473",
+      "lineName": "986路",
+      "stopId": "116190",
+      "startStopName": "浦晓南路江月路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.495887",
+        "lat": "31.156593"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A51802D"
+          },
+          {
+            "countdown": "剩余16分钟",
+            "time": "18:05",
+            "vehicle": "沪A35691D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A32225D无障碍"
+          }
+        ],
+        "lineId": "10473",
+        "lineName": "986路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "淮海中路思南路",
+      "sai": {
+        "nextBusDistance": "4898",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 4,
+        "nextBusStopCount": "8",
+        "currentBusArriveTime": "7",
+        "currentLicensePlate": "沪A51727D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "19",
+        "nextLicensePlate": "沪A55953D",
+        "currentBusDistance": "1829"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60021",
+      "lineName": "1012路",
+      "stopId": "687B0001",
+      "startStopName": "海阳路长清路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.495887",
+        "lat": "31.156593"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余10分钟",
+            "time": "17:59",
+            "vehicle": "沪A69758D无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A61561D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A35370D无障碍"
+          }
+        ],
+        "lineId": "60021",
+        "lineName": "1012路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "10分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "19:30",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "currentBusArriveTime": "1",
+        "currentLicensePlate": "沪A02181D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "160"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "71001",
+      "lineName": "浦东37路",
+      "stopId": "126108",
+      "startStopName": "华夏西路云台路（东方南院）",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.502121",
+        "lat": "31.15756"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:55",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余13分钟",
+            "time": "18:02",
+            "vehicle": "沪A12797A无障碍"
+          },
+          {
+            "countdown": "剩余40分钟",
+            "time": "18:29",
+            "vehicle": "沪A15896A无障碍"
+          },
+          {
+            "countdown": "剩余1小时7分钟",
+            "time": "18:56",
+            "vehicle": "沪A15506A无障碍"
+          }
+        ],
+        "lineId": "71001",
+        "lineName": "浦东37路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "13分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:15",
+      "endStopName": "芦恒路枢纽站",
+      "stopName": "海阳路洪山路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60011",
+      "lineName": "浦东80路",
+      "stopId": "131884",
+      "startStopName": "华夏西路云台路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.494553",
+        "lat": "31.159631"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:20",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余14分钟",
+            "time": "18:03",
+            "vehicle": "沪A56755D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A51518D无障碍"
+          },
+          {
+            "countdown": "剩余51分钟",
+            "time": "18:40",
+            "vehicle": "沪A55906D无障碍"
+          }
+        ],
+        "lineId": "60011",
+        "lineName": "浦东80路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "14分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:43",
+      "endStopName": "板泉路新浦路",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 5,
+        "currentBusArriveTime": "14",
+        "currentLicensePlate": "沪A56555D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "currentBusDistance": "3512"
+      },
+      "stopName": "灵岩南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60008",
+      "lineName": "1007路",
+      "stopId": "697B0004",
+      "startStopName": "长清路杨新路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.494553",
+        "lat": "31.159631"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余7分钟",
+            "time": "17:56",
+            "vehicle": "沪A61032D无障碍"
+          },
+          {
+            "countdown": "剩余14分钟",
+            "time": "18:03",
+            "vehicle": "沪A65265D无障碍"
+          }
+        ],
+        "lineId": "60008",
+        "lineName": "1007路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "7分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:00",
+      "endStopName": "长清路杨新路",
+      "stopName": "灵岩南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60021",
+      "lineName": "1012路",
+      "stopId": "697B0004",
+      "startStopName": "海阳路长清路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.494553",
+        "lat": "31.159631"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余10分钟",
+            "time": "17:59",
+            "vehicle": "沪A69758D无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A61561D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A35370D无障碍"
+          }
+        ],
+        "lineId": "60021",
+        "lineName": "1012路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "10分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "19:30",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 2,
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A02181D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "553"
+      },
+      "stopName": "灵岩南路杨思路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60011",
+      "lineName": "浦东80路",
+      "stopId": "131874",
+      "startStopName": "板泉路新浦路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.495998",
+        "lat": "31.156289"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余6分钟",
+            "time": "17:55",
+            "vehicle": "沪A55906D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A52999D无障碍"
+          },
+          {
+            "countdown": "剩余56分钟",
+            "time": "18:45",
+            "vehicle": "沪A35513D无障碍"
+          }
+        ],
+        "lineId": "60011",
+        "lineName": "浦东80路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "6分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:40",
+      "endStopName": "华夏西路云台路",
+      "sai": {
+        "currentBusComfort": 0,
+        "currentBusStopCount": 5,
+        "currentBusArriveTime": "10",
+        "currentLicensePlate": "沪A51518D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "currentBusDistance": "2213"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10473",
+      "lineName": "986路",
+      "stopId": "116203",
+      "startStopName": "淮海中路思南路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.495998",
+        "lat": "31.156289"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A56172D"
+          },
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A50737D"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A52523D"
+          }
+        ],
+        "lineId": "10473",
+        "lineName": "986路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "浦晓南路江月路",
+      "sai": {
+        "nextBusDistance": "1980",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "3",
+        "currentBusArriveTime": "10",
+        "currentLicensePlate": "沪A59509D",
+        "currentBarrierFree": false,
+        "nextBarrierFree": false,
+        "upDown": "1",
+        "nextBusArriveTime": "10",
+        "nextLicensePlate": "沪A58701D",
+        "currentBusDistance": "1882"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "60021",
+      "lineName": "1012路",
+      "stopId": "687B0000",
+      "startStopName": "海阳路长清路",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.495998",
+        "lat": "31.156289"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余10分钟",
+            "time": "17:59",
+            "vehicle": "沪A69758D无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A61561D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A35370D无障碍"
+          }
+        ],
+        "lineId": "60021",
+        "lineName": "1012路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "10分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "19:30",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "nextBusDistance": "4408",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "11",
+        "currentBusArriveTime": "4",
+        "currentLicensePlate": "沪A35370D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": false,
+        "upDown": "0",
+        "nextBusArriveTime": "21",
+        "nextLicensePlate": "沪A02181D",
+        "currentBusDistance": "997"
+      },
+      "stopName": "灵岩南路海阳路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "71001",
+      "lineName": "浦东37路",
+      "stopId": "126087",
+      "startStopName": "芦恒路枢纽站",
+      "upDown": 0,
+      "type": "1",
+      "point": {
+        "lon": "121.50238",
+        "lat": "31.157625"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:15",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余24分钟",
+            "time": "18:13",
+            "vehicle": "沪A15506A无障碍"
+          },
+          {
+            "countdown": "剩余52分钟",
+            "time": "18:41",
+            "vehicle": "沪A11015A无障碍"
+          },
+          {
+            "countdown": "剩余1小时17分钟",
+            "time": "19:06",
+            "vehicle": "沪A12507A无障碍"
+          }
+        ],
+        "lineId": "71001",
+        "lineName": "浦东37路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "24分钟后发车",
+        "direction": "0"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "20:30",
+      "endStopName": "华夏西路云台路（东方南院）",
+      "sai": {
+        "nextBusDistance": "7698",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 17,
+        "nextBusStopCount": "17",
+        "currentBusArriveTime": "27",
+        "currentLicensePlate": "沪A15896A无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "0",
+        "nextBusArriveTime": "28",
+        "nextLicensePlate": "沪A15506A无障碍",
+        "currentBusDistance": "7319"
+      },
+      "stopName": "海阳路洪山路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10469",
+      "lineName": "981路",
+      "stopId": "129681",
+      "startStopName": "其昌栈渡口",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.496803",
+        "lat": "31.155777"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:50",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "即将发车",
+            "time": "17:50",
+            "vehicle": "沪A06328D无障碍"
+          },
+          {
+            "countdown": "剩余12分钟",
+            "time": "18:01",
+            "vehicle": "沪A05638D无障碍"
+          },
+          {
+            "countdown": "剩余23分钟",
+            "time": "18:12",
+            "vehicle": "沪A56089D无障碍"
+          }
+        ],
+        "lineId": "10469",
+        "lineName": "981路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "即将发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:30",
+      "endStopName": "前滩大道耀体路",
+      "sai": {
+        "nextBusDistance": "3253",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 3,
+        "nextBusStopCount": "6",
+        "currentBusArriveTime": "7",
+        "currentLicensePlate": "沪A39937D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "15",
+        "nextLicensePlate": "沪A53765D无障碍",
+        "currentBusDistance": "1429"
+      },
+      "stopName": "海阳路灵岩南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "12084",
+      "lineName": "174路",
+      "stopId": "104451",
+      "startStopName": "召楼路闵瑞路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.496803",
+        "lat": "31.155777"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "06:00",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A59197D无障碍"
+          },
+          {
+            "countdown": "剩余31分钟",
+            "time": "18:20",
+            "vehicle": "沪A51309D无障碍"
+          },
+          {
+            "countdown": "剩余51分钟",
+            "time": "18:40",
+            "vehicle": "沪A50301D无障碍"
+          }
+        ],
+        "lineId": "12084",
+        "lineName": "174路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "22:00",
+      "endStopName": "济阳路泳耀路",
+      "sai": {
+        "nextBusDistance": "4814",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "6",
+        "currentBusArriveTime": "2",
+        "currentLicensePlate": "沪A33117D无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "19",
+        "nextLicensePlate": "沪A56617D无障碍",
+        "currentBusDistance": "569"
+      },
+      "stopName": "海阳路灵岩南路"
+    },
+    {
+      "isParkLine": 0,
+      "lineId": "10335",
+      "lineName": "782路",
+      "stopId": "122498",
+      "startStopName": "普安路延安东路",
+      "upDown": 1,
+      "type": "1",
+      "point": {
+        "lon": "121.496803",
+        "lat": "31.155777"
+      },
+      "followId": 0,
+      "startEarlyLateTime": "05:30",
+      "dispatchCarSchedule": {
+        "scheduleMsgDefault": "等待首站发车",
+        "dispatchCars": [
+          {
+            "countdown": "剩余11分钟",
+            "time": "18:00",
+            "vehicle": "沪A09253F无障碍"
+          },
+          {
+            "countdown": "剩余21分钟",
+            "time": "18:10",
+            "vehicle": "沪A02167A无障碍"
+          }
+        ],
+        "lineId": "10335",
+        "lineName": "782路",
+        "scheduleCode": 1,
+        "scheduleMsgShort": "11分钟后发车",
+        "direction": "1"
+      },
+      "indexId": 0,
+      "endEarlyLateTime": "23:15",
+      "endStopName": "海阳路长清路",
+      "sai": {
+        "nextBusDistance": "4683",
+        "currentBusComfort": 0,
+        "currentBusStopCount": 1,
+        "nextBusStopCount": "8",
+        "currentBusArriveTime": "1",
+        "currentLicensePlate": "沪A06736A无障碍",
+        "currentBarrierFree": true,
+        "nextBarrierFree": true,
+        "upDown": "1",
+        "nextBusArriveTime": "23",
+        "nextLicensePlate": "沪A07256F无障碍",
+        "currentBusDistance": "278"
+      },
+      "stopName": "海阳路灵岩南路"
+    }
+  ],
+  "retCode": 0
+}
