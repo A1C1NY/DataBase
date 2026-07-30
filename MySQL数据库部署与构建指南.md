@@ -4,7 +4,7 @@
 
 本文档用于独立完成“城市公共交通实时状态查询与分析系统”的 MySQL 数据库部署、建库、建表和基础验证。完成本文档后，应得到一个可供后续 FastAPI 后端连接的 MySQL 8 数据库。
 
-本阶段只建设数据库，不实现 Python 后端、外部 API 采集或 Vue 前端。数据库最终包含以下 10 张表：
+数据库最终包含以下 10 张表：
 
 1. `users`
 2. `lines`
@@ -238,6 +238,9 @@ CREATE DATABASE IF NOT EXISTS transit_system
 CREATE USER IF NOT EXISTS 'transit_app'@'%'
   IDENTIFIED BY '请替换为应用数据库密码';
 
+ALTER USER 'transit_app'@'%'
+  IDENTIFIED BY '请替换为应用数据库密码';
+
 GRANT SELECT, INSERT, UPDATE, DELETE,
       CREATE, ALTER, INDEX, DROP, REFERENCES
 ON transit_system.*
@@ -286,7 +289,7 @@ CREATE TABLE users (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `lines` (
+CREATE TABLE lines (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     line_name VARCHAR(100) NOT NULL,
     direction TINYINT UNSIGNED NOT NULL,
@@ -348,8 +351,9 @@ CREATE TABLE line_routes (
     UNIQUE KEY uq_line_routes_shanghai_stop
         (line_id, shanghai_stop_id),
     KEY idx_line_routes_stop (stop_id),
+    KEY idx_line_routes_line_stop (line_id, stop_id),
     CONSTRAINT fk_line_routes_line
-        FOREIGN KEY (line_id) REFERENCES `lines` (id)
+        FOREIGN KEY (line_id) REFERENCES lines (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_line_routes_stop
         FOREIGN KEY (stop_id) REFERENCES stops (id)
@@ -438,18 +442,18 @@ CREATE TABLE arrival_infos (
     next_license_plate VARCHAR(64) NULL,
     next_barrier_free BOOLEAN NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uq_arrival_snapshot
-        (line_id, stop_id, collected_at),
+    UNIQUE KEY uq_arrival_run_line_stop
+        (ingestion_run_id, line_id, stop_id),
     KEY idx_arrival_realtime
-        (line_id, stop_id, collected_at DESC),
+        (line_id, stop_id, collected_at),
     KEY idx_arrival_stop_time (stop_id, collected_at DESC),
+    KEY idx_arrival_line_time (line_id, collected_at),
     KEY idx_arrival_time (collected_at),
-    KEY idx_arrival_ingestion_run (ingestion_run_id),
     CONSTRAINT fk_arrival_ingestion_run
         FOREIGN KEY (ingestion_run_id) REFERENCES ingestion_runs (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_arrival_line
-        FOREIGN KEY (line_id) REFERENCES `lines` (id)
+        FOREIGN KEY (line_id) REFERENCES lines (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_arrival_stop
         FOREIGN KEY (stop_id) REFERENCES stops (id)
@@ -474,17 +478,16 @@ CREATE TABLE dispatch_schedules (
     message_default VARCHAR(255) NULL,
     message_short VARCHAR(255) NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uq_dispatch_schedule_snapshot
-        (line_id, collected_at),
+    UNIQUE KEY uq_dispatch_schedule_run_line
+        (ingestion_run_id, line_id),
     KEY idx_dispatch_schedule_line_time
-        (line_id, collected_at DESC),
+        (line_id, collected_at),
     KEY idx_dispatch_schedule_time (collected_at),
-    KEY idx_dispatch_schedule_ingestion_run (ingestion_run_id),
     CONSTRAINT fk_dispatch_schedule_ingestion_run
         FOREIGN KEY (ingestion_run_id) REFERENCES ingestion_runs (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_dispatch_schedule_line
-        FOREIGN KEY (line_id) REFERENCES `lines` (id)
+        FOREIGN KEY (line_id) REFERENCES lines (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT chk_dispatch_schedule_code CHECK (
         schedule_code IS NULL OR schedule_code IN (-1, 0, 1)
@@ -580,6 +583,15 @@ SHOW INDEX FROM dispatch_schedules;
 SHOW INDEX FROM query_logs;
 ```
 
+重点确认：
+
+- `line_routes` 存在普通索引 `idx_line_routes_line_stop (line_id, stop_id)`，但它不是唯一索引；
+- `uq_arrival_run_line_stop (ingestion_run_id, line_id, stop_id)` 负责同一采集批次内的到站快照幂等；
+- `idx_arrival_realtime (line_id, stop_id, collected_at)` 支持最新到站查询；
+- `arrival_infos` 存在 `idx_arrival_line_time (line_id, collected_at)`；
+- `uq_dispatch_schedule_run_line (ingestion_run_id, line_id)` 负责同一采集批次内的调度快照幂等；
+- `idx_dispatch_schedule_line_time (line_id, collected_at)` 支持最新调度和线路历史查询。
+
 也可以一次查看全部索引：
 
 ```sql
@@ -600,7 +612,7 @@ ORDER BY table_name, index_name, seq_in_index;
 
 ```sql
 SHOW CREATE TABLE users\G
-SHOW CREATE TABLE `lines`\G
+SHOW CREATE TABLE lines\G
 SHOW CREATE TABLE stops\G
 SHOW CREATE TABLE line_routes\G
 SHOW CREATE TABLE favorite_stops\G
@@ -627,7 +639,7 @@ VALUES
     ('数据库测试用户', 'not-a-real-password-hash', 'passenger');
 SET @test_user_id = LAST_INSERT_ID();
 
-INSERT INTO `lines`
+INSERT INTO lines
     (line_name, direction, line_type,
      shanghai_line_id, amap_line_id,
      first_departure_time, last_departure_time)
@@ -700,7 +712,7 @@ SELECT l.line_name,
        ai.current_license_plate,
        ai.current_barrier_free
 FROM arrival_infos AS ai
-JOIN `lines` AS l ON l.id = ai.line_id
+JOIN lines AS l ON l.id = ai.line_id
 JOIN stops AS s ON s.id = ai.stop_id
 JOIN line_routes AS lr
   ON lr.line_id = ai.line_id
@@ -718,7 +730,7 @@ ROLLBACK;
 
 ```sql
 SELECT COUNT(*) FROM users;
-SELECT COUNT(*) FROM `lines`;
+SELECT COUNT(*) FROM lines;
 SELECT COUNT(*) FROM stops;
 SELECT COUNT(*) FROM ingestion_runs;
 ```
@@ -736,14 +748,14 @@ SELECT COUNT(*) FROM ingestion_runs;
 ```sql
 START TRANSACTION;
 
-INSERT INTO `lines`
+INSERT INTO lines
     (line_name, direction, shanghai_line_id)
 VALUES
     ('测试线路', 0, 'TEST-LINE'),
     ('测试线路', 1, 'TEST-LINE');
 
 SELECT id, line_name, direction, shanghai_line_id
-FROM `lines`
+FROM lines
 WHERE shanghai_line_id = 'TEST-LINE';
 
 ROLLBACK;
@@ -753,7 +765,7 @@ ROLLBACK;
 
 ### 9.2 验证重复快照被拒绝
 
-`arrival_infos` 的 `(line_id, stop_id, collected_at)` 必须唯一。实际后端会使用 `ON DUPLICATE KEY` 幂等跳过；直接重复 `INSERT` 时 MySQL 应返回重复键错误。
+`arrival_infos` 的 `(ingestion_run_id, line_id, stop_id)` 必须唯一。同一采集批次使用不同 `collected_at` 重复插入相同线路站点时，也应触发 `uq_arrival_run_line_stop`。实际后端会使用 `ON DUPLICATE KEY` 幂等跳过；手工直接重复 `INSERT` 时 MySQL 应返回重复键错误。
 
 ### 9.3 验证用户删除策略
 
@@ -772,7 +784,7 @@ ROLLBACK;
 当 `line_routes` 或历史快照仍引用线路、站点时，执行 `DELETE` 应收到外键限制错误。业务代码必须更新 `is_active`，不能物理删除：
 
 ```sql
-UPDATE `lines`
+UPDATE lines
 SET is_active = FALSE
 WHERE id = :line_id;
 
@@ -950,7 +962,7 @@ LIMIT 20;
 
 ```sql
 CHECK TABLE users,
-            `lines`,
+            lines,
             stops,
             line_routes,
             favorite_stops,
