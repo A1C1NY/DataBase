@@ -236,10 +236,10 @@ CREATE DATABASE IF NOT EXISTS transit_system
 
 ```sql
 CREATE USER IF NOT EXISTS 'transit_app'@'%'
-  IDENTIFIED BY '请替换为应用数据库密码';
+  IDENTIFIED BY '114514';
 
 ALTER USER 'transit_app'@'%'
-  IDENTIFIED BY '请替换为应用数据库密码';
+  IDENTIFIED BY '114514';
 
 GRANT SELECT, INSERT, UPDATE, DELETE,
       CREATE, ALTER, INDEX, DROP, REFERENCES
@@ -289,7 +289,7 @@ CREATE TABLE users (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE lines (
+CREATE TABLE `lines` (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     line_name VARCHAR(100) NOT NULL,
     direction TINYINT UNSIGNED NOT NULL,
@@ -353,7 +353,7 @@ CREATE TABLE line_routes (
     KEY idx_line_routes_stop (stop_id),
     KEY idx_line_routes_line_stop (line_id, stop_id),
     CONSTRAINT fk_line_routes_line
-        FOREIGN KEY (line_id) REFERENCES lines (id)
+        FOREIGN KEY (line_id) REFERENCES `lines` (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_line_routes_stop
         FOREIGN KEY (stop_id) REFERENCES stops (id)
@@ -453,7 +453,7 @@ CREATE TABLE arrival_infos (
         FOREIGN KEY (ingestion_run_id) REFERENCES ingestion_runs (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_arrival_line
-        FOREIGN KEY (line_id) REFERENCES lines (id)
+        FOREIGN KEY (line_id) REFERENCES `lines` (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_arrival_stop
         FOREIGN KEY (stop_id) REFERENCES stops (id)
@@ -487,7 +487,7 @@ CREATE TABLE dispatch_schedules (
         FOREIGN KEY (ingestion_run_id) REFERENCES ingestion_runs (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_dispatch_schedule_line
-        FOREIGN KEY (line_id) REFERENCES lines (id)
+        FOREIGN KEY (line_id) REFERENCES `lines` (id)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT chk_dispatch_schedule_code CHECK (
         schedule_code IS NULL OR schedule_code IN (-1, 0, 1)
@@ -612,7 +612,7 @@ ORDER BY table_name, index_name, seq_in_index;
 
 ```sql
 SHOW CREATE TABLE users\G
-SHOW CREATE TABLE lines\G
+SHOW CREATE TABLE `lines`\G
 SHOW CREATE TABLE stops\G
 SHOW CREATE TABLE line_routes\G
 SHOW CREATE TABLE favorite_stops\G
@@ -639,7 +639,7 @@ VALUES
     ('数据库测试用户', 'not-a-real-password-hash', 'passenger');
 SET @test_user_id = LAST_INSERT_ID();
 
-INSERT INTO lines
+INSERT INTO `lines`
     (line_name, direction, line_type,
      shanghai_line_id, amap_line_id,
      first_departure_time, last_departure_time)
@@ -712,7 +712,7 @@ SELECT l.line_name,
        ai.current_license_plate,
        ai.current_barrier_free
 FROM arrival_infos AS ai
-JOIN lines AS l ON l.id = ai.line_id
+JOIN `lines` AS l ON l.id = ai.line_id
 JOIN stops AS s ON s.id = ai.stop_id
 JOIN line_routes AS lr
   ON lr.line_id = ai.line_id
@@ -726,16 +726,35 @@ WHERE user_id = @test_user_id;
 ROLLBACK;
 ```
 
+预期结果：
+
+- `USE` 和 `START TRANSACTION` 执行成功；
+- 每条 `INSERT` 均显示 `Query OK, 1 row affected`；
+- `UPDATE ingestion_runs` 显示 `Rows matched: 1  Changed: 1`；
+- 关联查询返回 1 行，关键列应为：
+
+```text
++-----------+-----------+--------------------+-------------+-------------------------+----------------------+
+| line_name | direction | stop_name          | sequence_no | current_license_plate   | current_barrier_free |
++-----------+-----------+--------------------+-------------+-------------------------+----------------------+
+| 980路     |         0 | 海阳路上南路         |           1 | 沪A51786D无障碍         |                    1 |
++-----------+-----------+--------------------+-------------+-------------------------+----------------------+
+1 row in set
+```
+
+- 收藏查询返回 `favorite_count = 1`；
+- `ROLLBACK` 显示 `Query OK, 0 rows affected`，上述临时数据全部撤销。
+
 回滚后确认表为空：
 
 ```sql
 SELECT COUNT(*) FROM users;
-SELECT COUNT(*) FROM lines;
+SELECT COUNT(*) FROM `lines`;
 SELECT COUNT(*) FROM stops;
 SELECT COUNT(*) FROM ingestion_runs;
 ```
 
-在一个全新数据库中，结果都应为 0。
+预期结果：在一个全新数据库中，四条查询的 `COUNT(*)` 都应为 `0`。如果表中原本已有数据，回滚后的计数应与测试前完全一致。
 
 ## 9. 验证关键约束
 
@@ -748,52 +767,163 @@ SELECT COUNT(*) FROM ingestion_runs;
 ```sql
 START TRANSACTION;
 
-INSERT INTO lines
+INSERT INTO `lines`
     (line_name, direction, shanghai_line_id)
 VALUES
     ('测试线路', 0, 'TEST-LINE'),
     ('测试线路', 1, 'TEST-LINE');
 
 SELECT id, line_name, direction, shanghai_line_id
-FROM lines
+FROM `lines`
 WHERE shanghai_line_id = 'TEST-LINE';
+
+INSERT INTO `lines`
+    (line_name, direction, shanghai_line_id)
+VALUES
+    ('重复方向测试', 0, 'TEST-LINE');
 
 ROLLBACK;
 ```
 
-应成功返回两行。若再插入相同 ID 和相同方向，应触发 `uq_lines_shanghai_direction` 唯一约束。
+预期结果：
+
+- 第一条 `INSERT` 显示 `Query OK, 2 rows affected`；
+- `SELECT` 返回 2 行，`direction` 分别为 `0` 和 `1`；
+- 第二条 `INSERT` 失败，返回 `ERROR 1062 (23000)`，并指向唯一键 `uq_lines_shanghai_direction`；
+- `ROLLBACK` 成功，不保留两条测试线路。
 
 ### 9.2 验证重复快照被拒绝
 
-`arrival_infos` 的 `(ingestion_run_id, line_id, stop_id)` 必须唯一。同一采集批次使用不同 `collected_at` 重复插入相同线路站点时，也应触发 `uq_arrival_run_line_stop`。实际后端会使用 `ON DUPLICATE KEY` 幂等跳过；手工直接重复 `INSERT` 时 MySQL 应返回重复键错误。
+`arrival_infos` 的 `(ingestion_run_id, line_id, stop_id)` 必须唯一。执行：
+
+```sql
+START TRANSACTION;
+
+INSERT INTO `lines` (line_name, direction)
+VALUES ('重复快照测试线路', 0);
+SET @dup_line_id = LAST_INSERT_ID();
+
+INSERT INTO stops (stop_name, longitude, latitude)
+VALUES ('重复快照测试站', 121.5000000, 31.2000000);
+SET @dup_stop_id = LAST_INSERT_ID();
+
+INSERT INTO ingestion_runs
+    (source, task_type, trigger_type, status)
+VALUES
+    ('shanghai', 'duplicate_snapshot_test', 'manual', 'running');
+SET @dup_run_id = LAST_INSERT_ID();
+
+INSERT INTO arrival_infos
+    (ingestion_run_id, line_id, stop_id, collected_at)
+VALUES
+    (@dup_run_id, @dup_line_id, @dup_stop_id, NOW(3));
+
+INSERT INTO arrival_infos
+    (ingestion_run_id, line_id, stop_id, collected_at)
+VALUES
+    (@dup_run_id, @dup_line_id, @dup_stop_id,
+     NOW(3) + INTERVAL 1 SECOND);
+
+ROLLBACK;
+```
+
+预期结果：
+
+- 前四条 `INSERT` 均成功，每条影响 1 行；
+- 第二次写入 `arrival_infos` 时返回 `ERROR 1062 (23000)`，并指向 `uq_arrival_run_line_stop`；
+- 即使两条快照的 `collected_at` 不同，也不允许同一采集批次重复写入同一线路站点；
+- `ROLLBACK` 成功，不保留任何测试数据。
+
+实际后端使用 `ON DUPLICATE KEY` 时可幂等跳过；这里故意使用普通 `INSERT` 验证唯一约束。
 
 ### 9.3 验证用户删除策略
 
-测试逻辑为：
+```sql
+START TRANSACTION;
 
-1. 新建用户和站点；
-2. 添加一条收藏和查询日志；
-3. 删除用户；
-4. 收藏应被级联删除；
-5. 查询日志应保留，`user_id` 应变为 `NULL`。
+INSERT INTO users (username, password_hash, role)
+VALUES ('删除策略测试用户', 'not-a-real-password-hash', 'passenger');
+SET @delete_user_id = LAST_INSERT_ID();
+
+INSERT INTO stops (stop_name, longitude, latitude)
+VALUES ('删除策略测试站', 121.5100000, 31.2100000);
+SET @delete_stop_id = LAST_INSERT_ID();
+
+INSERT INTO favorite_stops (user_id, stop_id)
+VALUES (@delete_user_id, @delete_stop_id);
+
+INSERT INTO query_logs (user_id, stop_id)
+VALUES (@delete_user_id, @delete_stop_id);
+SET @delete_query_log_id = LAST_INSERT_ID();
+
+DELETE FROM users WHERE id = @delete_user_id;
+
+SELECT COUNT(*) AS favorite_count
+FROM favorite_stops
+WHERE user_id = @delete_user_id;
+
+SELECT id, user_id, stop_id
+FROM query_logs
+WHERE id = @delete_query_log_id;
+
+ROLLBACK;
+```
+
+预期结果：
+
+- 四条 `INSERT` 均成功，`DELETE FROM users` 显示 `1 row affected`；
+- 收藏查询返回 `favorite_count = 0`，证明 `ON DELETE CASCADE` 生效；
+- 日志查询仍返回 1 行，其 `id` 与 `stop_id` 保留，`user_id` 为 `NULL`，证明 `ON DELETE SET NULL` 生效；
+- `ROLLBACK` 成功，用户、站点、收藏和日志的测试变更均被撤销。
 
 后端常规管理只停用用户；该测试用于证明数据库约束正确。
 
 ### 9.4 验证线路和站点不能误删
 
-当 `line_routes` 或历史快照仍引用线路、站点时，执行 `DELETE` 应收到外键限制错误。业务代码必须更新 `is_active`，不能物理删除：
+当 `line_routes` 仍引用线路和站点时，验证物理删除被拒绝，但逻辑停用可以成功：
 
 ```sql
-UPDATE lines
+START TRANSACTION;
+
+INSERT INTO `lines` (line_name, direction)
+VALUES ('外键限制测试线路', 0);
+SET @restrict_line_id = LAST_INSERT_ID();
+
+INSERT INTO stops (stop_name, longitude, latitude)
+VALUES ('外键限制测试站', 121.5200000, 31.2200000);
+SET @restrict_stop_id = LAST_INSERT_ID();
+
+INSERT INTO line_routes (line_id, stop_id, sequence_no)
+VALUES (@restrict_line_id, @restrict_stop_id, 1);
+
+DELETE FROM `lines` WHERE id = @restrict_line_id;
+DELETE FROM stops WHERE id = @restrict_stop_id;
+
+UPDATE `lines`
 SET is_active = FALSE
-WHERE id = :line_id;
+WHERE id = @restrict_line_id;
 
 UPDATE stops
 SET is_active = FALSE
-WHERE id = :stop_id;
+WHERE id = @restrict_stop_id;
+
+SELECT l.is_active AS line_active,
+       s.is_active AS stop_active
+FROM `lines` AS l
+JOIN stops AS s ON s.id = @restrict_stop_id
+WHERE l.id = @restrict_line_id;
+
+ROLLBACK;
 ```
 
-上面的 `:line_id` 和 `:stop_id` 是后端参数写法，不能直接在 MySQL 客户端原样执行；手工测试时替换为实际数字。
+预期结果：
+
+- 三条 `INSERT` 均成功；
+- ``DELETE FROM `lines``` 返回 `ERROR 1451 (23000)`，并指向外键 `fk_line_routes_line`；
+- `DELETE FROM stops` 返回 `ERROR 1451 (23000)`，并指向外键 `fk_line_routes_stop`；
+- 两条 `UPDATE` 均显示 `1 row affected`；
+- 最后的 `SELECT` 返回 1 行，`line_active = 0` 且 `stop_active = 0`；
+- `ROLLBACK` 成功，不保留测试线路、站点和站序。
 
 ## 10. 建立后端连接参数
 
@@ -962,7 +1092,7 @@ LIMIT 20;
 
 ```sql
 CHECK TABLE users,
-            lines,
+            `lines`,
             stops,
             line_routes,
             favorite_stops,
@@ -1094,3 +1224,58 @@ MySQL 版本：
 ```
 
 真实密码不要填写在此记录中。
+
+
+## 补充： Linux上完成的备份数据库流程
+
+当前 MySQL 版本不支持通过 `@@session.in_transaction` 读取该状态。可以直接执行：
+
+```sql
+ROLLBACK;
+```
+
+即使当前没有事务，`ROLLBACK` 也是安全的，通常返回：
+
+```text
+Query OK, 0 rows affected
+```
+
+然后确认版本：
+
+```sql
+SELECT VERSION(), @@version_comment;
+```
+
+退出客户端：
+
+```sql
+EXIT;
+```
+
+再在系统终端执行备份命令：
+
+```bash
+mkdir -p ~/transit-db-backups
+chmod 700 ~/transit-db-backups
+
+backup_file=~/transit-db-backups/transit_system_$(date +%F_%H%M%S).sql
+
+sudo mysqldump \
+  --single-transaction \
+  --triggers \
+  --set-gtid-purged=OFF \
+  --no-tablespaces \
+  transit_system > "$backup_file"
+
+chmod 600 "$backup_file"
+ls -lh "$backup_file"
+grep -c '^CREATE TABLE' "$backup_file"
+```
+
+最后的表数量预期为：
+
+```text
+10
+```
+
+直接在备份前执行一次 `ROLLBACK`，比依赖不同版本支持情况不一致的事务状态变量更稳妥。
