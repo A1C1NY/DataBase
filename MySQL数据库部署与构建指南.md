@@ -402,7 +402,7 @@ CREATE TABLE ingestion_runs (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     source ENUM('shanghai', 'amap') NOT NULL,
     task_type VARCHAR(50) NOT NULL,
-    trigger_type ENUM('manual', 'user_request') NOT NULL,
+    trigger_type ENUM('scheduled', 'manual', 'user_request') NOT NULL,
     request_key VARCHAR(255) NULL,
     started_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     finished_at DATETIME(3) NULL,

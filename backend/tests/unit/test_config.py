@@ -30,6 +30,10 @@ def test_settings_use_expected_defaults() -> None:
     assert settings.shanghai_api_url is None
     assert settings.shanghai_api_key is None
     assert settings.upstream_timeout_seconds == 10.0
+    assert settings.enable_scheduler is False
+    assert settings.schedule_interval_minutes == 20
+    assert settings.scheduled_longitude is None
+    assert settings.scheduled_latitude is None
 
 
 def test_secret_value_is_loaded_as_secret_str() -> None:
@@ -56,6 +60,22 @@ def test_jwt_expire_minutes_has_maximum() -> None:
 def test_upstream_timeout_has_valid_range(value: float) -> None:
     with pytest.raises(ValidationError):
         make_settings(upstream_timeout_seconds=value)
+
+
+@pytest.mark.parametrize("value", [0, -1, 1441])
+def test_schedule_interval_has_valid_range(value: int) -> None:
+    with pytest.raises(ValidationError):
+        make_settings(schedule_interval_minutes=value)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("scheduled_longitude", -181), ("scheduled_longitude", 181),
+     ("scheduled_latitude", -91), ("scheduled_latitude", 91)],
+)
+def test_scheduled_coordinates_have_valid_range(field: str, value: float) -> None:
+    with pytest.raises(ValidationError):
+        make_settings(**{field: value})
 
 
 def test_get_settings_is_cached(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     shanghai_api_key: SecretStr | None = None
     upstream_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
 
+    enable_scheduler: bool = False
+    schedule_interval_minutes: int = Field(default=20, ge=1, le=1440)
+    scheduled_longitude: float | None = Field(default=None, ge=-180, le=180)
+    scheduled_latitude: float | None = Field(default=None, ge=-90, le=90)
+
 
 @lru_cache
 def get_settings() -> Settings:

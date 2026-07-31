@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -17,7 +17,7 @@ def test_now_uses_shanghai_timezone() -> None:
 
 
 def test_to_mysql_datetime_converts_utc_to_shanghai() -> None:
-    value = datetime(2026, 7, 31, 2, 0, tzinfo=timezone.utc)
+    value = datetime(2026, 7, 31, 2, 0, tzinfo=UTC)
 
     result = to_mysql_datetime(value)
 

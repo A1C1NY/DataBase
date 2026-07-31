@@ -1,7 +1,7 @@
 """FastAPI 应用装配。
 
-TODO: 加入简单的统一异常响应和前端开发地址 CORS。课程版不启动定时任务，
-数据库结构只通过 Alembic 管理。
+TODO: 加入简单异常响应、前端开发地址 CORS 和 lifespan。在 lifespan 中仅当配置启用时
+启动/停止基础调度器；数据库结构只通过 Alembic 管理。
 """
 
 from fastapi import FastAPI
