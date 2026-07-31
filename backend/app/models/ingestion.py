@@ -1,0 +1,32 @@
+"""采集运行、到站快照和发车计划模型。
+
+TODO: 实现 ingestion_runs、arrival_infos、dispatch_schedules、dispatch_cars。保留两辆车
+横向结构，不创建 Vehicle 表；快照按 run+line+stop 幂等；调度按 run+line 去重；发车明细
+随 schedule CASCADE。所有可选上游字段允许 NULL，时间字段使用 DATETIME(3)。
+"""
+
+from app.db.base import Base
+
+
+class IngestionRun(Base):
+    # TODO: 补齐主键和字段后删除 __abstract__。
+    __abstract__ = True
+    __tablename__ = "ingestion_runs"
+
+
+class ArrivalInfo(Base):
+    # TODO: 补齐主键和字段后删除 __abstract__。
+    __abstract__ = True
+    __tablename__ = "arrival_infos"
+
+
+class DispatchSchedule(Base):
+    # TODO: 补齐主键和字段后删除 __abstract__。
+    __abstract__ = True
+    __tablename__ = "dispatch_schedules"
+
+
+class DispatchCar(Base):
+    # TODO: 补齐主键和字段后删除 __abstract__。
+    __abstract__ = True
+    __tablename__ = "dispatch_cars"
