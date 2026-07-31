@@ -1,10 +1,9 @@
 """管理员路由。
 
-TODO: 用户列表/创建/更新，采集运行列表/详情，高德线路/站点与上海附近手动同步，线路和
-站点启停、数据质量摘要。全部要求 admin，手动任务需返回 ingestion_run_id 便于追踪。
+TODO: 实现用户列表、创建、更新以及线路和站点启停。API 数据由初始化命令和用户刷新
+获取，不额外实现管理员数据同步中心。
 """
 
 from fastapi import APIRouter
 
 router = APIRouter()
-

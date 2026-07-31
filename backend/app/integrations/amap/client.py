@@ -1,6 +1,7 @@
-"""高德 HTTP 客户端。
+"""高德 API 同步 HTTP 客户端。
 
-TODO: 使用共享 httpx.AsyncClient，实现线路与站点查询、超时、有限重试和 retCode/status
-校验；日志必须脱敏 key。客户端只返回 DTO，不写数据库。
+TODO: 使用 httpx.Client 实现线路查询和站点查询。调用前检查 API Key，设置配置中的超时，
+校验 HTTP 状态和高德业务状态；返回 schemas 中的 DTO，不直接写数据库，不记录完整密钥。
+课程版只由用户查询或管理员操作手动调用，不实现重试、缓存和自动调度。
 """
 

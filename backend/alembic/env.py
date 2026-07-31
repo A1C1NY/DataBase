@@ -7,6 +7,7 @@ ENUM、CHECK、DESC 索引和外键删除策略，不能只接受自动生成结
 from logging.config import fileConfig
 
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 from app.core.config import get_settings
 from app.db.base import Base
@@ -28,12 +29,18 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    # TODO: Alembic 使用同步 MySQL 驱动，或按官方 async 模板创建连接后 run_sync。
-    raise NotImplementedError("请先配置 Alembic 的 MySQL 在线迁移连接")
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
+        with context.begin_transaction():
+            context.run_migrations()
 
 
 if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

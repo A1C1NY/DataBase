@@ -1,7 +1,7 @@
 """FastAPI 应用装配。
 
-TODO: 加入统一异常响应、结构化日志、CORS 白名单和 lifespan；仅当
-ENABLE_SCHEDULER=true 时在唯一进程启动/停止 APScheduler。
+TODO: 加入简单的统一异常响应和前端开发地址 CORS。课程版不启动定时任务，
+数据库结构只通过 Alembic 管理。
 """
 
 from fastapi import FastAPI
@@ -16,4 +16,3 @@ app.include_router(api_router, prefix="/api")
 async def health() -> dict[str, str]:
     # TODO: 增加数据库连通性检查；不得在响应中泄露连接参数。
     return {"status": "ok"}
-

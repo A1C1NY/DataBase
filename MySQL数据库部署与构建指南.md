@@ -402,11 +402,11 @@ CREATE TABLE ingestion_runs (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     source ENUM('shanghai', 'amap') NOT NULL,
     task_type VARCHAR(50) NOT NULL,
-    trigger_type ENUM('scheduled', 'manual', 'user_request') NOT NULL,
+    trigger_type ENUM('manual', 'user_request') NOT NULL,
     request_key VARCHAR(255) NULL,
     started_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     finished_at DATETIME(3) NULL,
-    status ENUM('running', 'success', 'partial', 'failed') NOT NULL
+    status ENUM('running', 'success', 'failed') NOT NULL
         DEFAULT 'running',
     received_count INT UNSIGNED NOT NULL DEFAULT 0,
     inserted_count INT UNSIGNED NOT NULL DEFAULT 0,
@@ -667,7 +667,7 @@ VALUES (@test_user_id, @test_stop_id);
 INSERT INTO ingestion_runs
     (source, task_type, trigger_type, request_key, status)
 VALUES
-    ('shanghai', 'nearby_realtime', 'manual',
+    ('shanghai', 'nearby_query', 'manual',
      '121.499368,31.156783', 'running');
 SET @test_run_id = LAST_INSERT_ID();
 
@@ -943,7 +943,7 @@ ROLLBACK;
 SQLAlchemy 异步连接 URL 形式为：
 
 ```text
-mysql+asyncmy://transit_app:经过URL编码的密码@127.0.0.1:3306/transit_system?charset=utf8mb4
+mysql+pymysql://transit_app:经过URL编码的密码@127.0.0.1:3306/transit_system?charset=utf8mb4
 ```
 
 不要现在把真实密码写进项目文件。后端阶段会创建 `.env` 和 `.env.example`，其中只有 `.env.example` 可以提交版本管理。

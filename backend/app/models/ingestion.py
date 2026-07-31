@@ -1,8 +1,8 @@
 """采集运行、到站快照和发车计划模型。
 
 TODO: 实现 ingestion_runs、arrival_infos、dispatch_schedules、dispatch_cars。保留两辆车
-横向结构，不创建 Vehicle 表；快照按 run+line+stop 幂等；调度按 run+line 去重；发车明细
-随 schedule CASCADE。所有可选上游字段允许 NULL，时间字段使用 DATETIME(3)。
+横向结构，不创建 Vehicle 表；使用数据库唯一约束避免一次导入内重复，所有可选字段允许
+NULL。课程版只使用简单成功/失败记录，不实现自动任务恢复和历史清理。
 """
 
 from app.db.base import Base
