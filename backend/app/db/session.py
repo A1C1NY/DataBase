@@ -1,20 +1,38 @@
-"""同步数据库会话。
+"""同步数据库 Engine 和 Session 管理。"""
 
-课程版使用同步 SQLAlchemy + PyMySQL。Service 直接使用 Session 完成查询和事务，
-不再设置独立 Repository 层。
-"""
-
-from collections.abc import Iterator
+from collections.abc import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 
-engine = create_engine(get_settings().database_url, pool_pre_ping=True)
-SessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
+
+settings = get_settings()
+
+# Engine 是应用级对象，管理数据库连接池。
+# 整个应用只需要创建一次。
+engine = create_engine(
+    settings.database_url,
+    pool_pre_ping=True,
+)
+
+# SessionFactory 是 Session 的工厂，不是一个具体的数据库会话。
+SessionFactory = sessionmaker(
+    bind=engine,
+    class_=Session,
+    autoflush=False,
+    expire_on_commit=False,
+)
 
 
-def get_session() -> Iterator[Session]:
-    with SessionFactory() as session:
+def get_session() -> Generator[Session, None, None]:
+    """为一次请求提供数据库 Session，并在请求结束后关闭。"""
+
+    session = SessionFactory()
+
+    try:
         yield session
+        
+    finally:
+        session.close()

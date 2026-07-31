@@ -1,5 +1,3 @@
-"""已完成的上海时区与计划发车时间工具。"""
-
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
