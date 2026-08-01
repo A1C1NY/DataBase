@@ -1,39 +1,96 @@
-"""用户、收藏和查询日志模型。
+"""User, favorite-stop, and query-log database models."""
 
-TODO: 实现 users、favorite_stops、query_logs。用户删除时收藏 CASCADE、日志 user_id
-SET NULL；站点引用 RESTRICT。username 唯一，日志建立 stop/time、user/time、time 索引。
-"""
-
-from app.db.base import Base
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, Column, ForeignKey, Index, String, Text, func
-from sqlalchemy.dialects.mysql import BIGINT, DATETIME, ENUM
+from sqlalchemy import Boolean, ForeignKey, Index, String, text
+from sqlalchemy.dialects.mysql import DATETIME, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base, BIGINT_UNSIGNED, TimestampMixin
+from app.db.base import BIGINT_UNSIGNED, MYSQL_TABLE_OPTIONS, Base, TimestampMixin
 
-class User(Base, TimestampMixin):
-    """
-    用户模型
-    """
+if TYPE_CHECKING:
+    from app.models.transit import Stop
+
+
+class User(TimestampMixin, Base):
     __tablename__ = "users"
+    __table_args__ = MYSQL_TABLE_OPTIONS
 
-    id: Mapped[int] = mapped_column(BIGINT_UNSIGNED, primary_key=True)
-    username: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(BIGINT_UNSIGNED, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[str] = mapped_column(ENUM('passenger','analyst','admin'), nullable=False, server_default="user")
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="1")
-    created_at: Mapped[datetime] = mapped_column(DATETIME(fsp=6), nullable=False, server_default=func.current_timestamp(6))
+    role: Mapped[str] = mapped_column(
+        ENUM("passenger", "analyst", "admin"),
+        nullable=False,
+        server_default=text("'passenger'"),
+    )
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("1"))
+
+    favorite_stops: Mapped[list["FavoriteStop"]] = relationship(
+        back_populates="user", passive_deletes=True
+    )
+    query_logs: Mapped[list["QueryLog"]] = relationship(back_populates="user", passive_deletes=True)
 
 
 class FavoriteStop(Base):
-    # TODO: 补齐复合主键和字段后删除 __abstract__。
-    __abstract__ = True
     __tablename__ = "favorite_stops"
+    __table_args__ = (
+        Index("idx_favorite_stops_stop", "stop_id"),
+        MYSQL_TABLE_OPTIONS,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey(
+            "users.id",
+            name="fk_favorite_stops_user",
+            onupdate="RESTRICT",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+    stop_id: Mapped[int] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey(
+            "stops.id",
+            name="fk_favorite_stops_stop",
+            onupdate="RESTRICT",
+            ondelete="RESTRICT",
+        ),
+        primary_key=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DATETIME(fsp=3), nullable=False, server_default=text("CURRENT_TIMESTAMP(3)")
+    )
+
+    user: Mapped[User] = relationship(back_populates="favorite_stops")
+    stop: Mapped["Stop"] = relationship(back_populates="favorite_stops")
 
 
 class QueryLog(Base):
-    # TODO: 补齐主键和字段后删除 __abstract__。
-    __abstract__ = True
     __tablename__ = "query_logs"
+    __table_args__ = (
+        Index("idx_query_logs_stop_time", "stop_id", "queried_at"),
+        Index("idx_query_logs_user_time", "user_id", "queried_at"),
+        Index("idx_query_logs_time", "queried_at"),
+        MYSQL_TABLE_OPTIONS,
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_UNSIGNED, primary_key=True, autoincrement=True)
+    user_id: Mapped[int | None] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey("users.id", name="fk_query_logs_user", onupdate="RESTRICT", ondelete="SET NULL"),
+        nullable=True,
+    )
+    stop_id: Mapped[int] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey("stops.id", name="fk_query_logs_stop", onupdate="RESTRICT", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    queried_at: Mapped[datetime] = mapped_column(
+        DATETIME(fsp=3), nullable=False, server_default=text("CURRENT_TIMESTAMP(3)")
+    )
+
+    user: Mapped[User | None] = relationship(back_populates="query_logs")
+    stop: Mapped["Stop"] = relationship(back_populates="query_logs")

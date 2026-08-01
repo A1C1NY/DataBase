@@ -1,8 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase, mapped_column 
-from sqlalchemy.dialects.mysql import BIGINT
-from sqlalchemy.orm import Mapped
+"""Shared SQLAlchemy declarative types and table options."""
+
 from datetime import datetime
-from sqlalchemy import func, MetaData
+
+from sqlalchemy import MetaData, text
+from sqlalchemy.dialects.mysql import BIGINT, DATETIME
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 BIGINT_UNSIGNED = BIGINT(unsigned=True)
 
@@ -14,21 +16,27 @@ NAMING_CONVENTION = {
     "pk": "pk_%(table_name)s",
 }
 
+MYSQL_TABLE_OPTIONS = {
+    "mysql_engine": "InnoDB",
+    "mysql_charset": "utf8mb4",
+    "mysql_collate": "utf8mb4_0900_ai_ci",
+}
+
 
 class Base(DeclarativeBase):
-    """SQLAlchemy 声明式基类。"""
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
+
 class TimestampMixin:
-    """带 created_at/updated_at 的基础表 mixin。"""
+    """MySQL DATETIME(3) creation and automatic-update timestamps."""
 
     created_at: Mapped[datetime] = mapped_column(
-        server_default=func.current_timestamp(), nullable=False
+        DATETIME(fsp=3),
+        nullable=False,
+        server_default=text("CURRENT_TIMESTAMP(3)"),
     )
     updated_at: Mapped[datetime] = mapped_column(
-        server_default=func.current_timestamp(), onupdate=func.current_timestamp(), nullable=False
+        DATETIME(fsp=3),
+        nullable=False,
+        server_default=text("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"),
     )
-
-
-
-
