@@ -406,7 +406,7 @@ CREATE TABLE ingestion_runs (
     request_key VARCHAR(255) NULL,
     started_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     finished_at DATETIME(3) NULL,
-    status ENUM('running', 'success', 'failed') NOT NULL
+    status ENUM('running', 'success', 'partial', 'failed')  NOT NULL
         DEFAULT 'running',
     received_count INT UNSIGNED NOT NULL DEFAULT 0,
     inserted_count INT UNSIGNED NOT NULL DEFAULT 0,
