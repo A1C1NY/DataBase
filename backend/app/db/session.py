@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 
-
 settings = get_settings()
 
 # Engine 是应用级对象，管理数据库连接池。
