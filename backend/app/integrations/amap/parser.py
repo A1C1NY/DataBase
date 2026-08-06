@@ -75,6 +75,7 @@ class ParsedLine:
     basic_price: Decimal | None
     total_price: Decimal | None
     bounds_raw: str | None
+    ui_color: str | None
     polyline_raw: str
     stops: tuple[ParsedLineStop, ...]
     path_points: tuple[ParsedPathPoint, ...]
@@ -291,6 +292,7 @@ def parse_line_response(
                     line.total_price, f"线路 {amap_line_id} total_price", warnings
                 ),
                 bounds_raw=line.bounds,
+                ui_color=line.uicolor,
                 polyline_raw=polyline_raw,
                 stops=tuple(stops),
                 path_points=tuple(path_points),

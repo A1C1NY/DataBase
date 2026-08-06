@@ -65,6 +65,7 @@ def test_line_parser_normalizes_empty_company_array_to_none() -> None:
                 "id": "L1",
                 "name": "测试线(A--B)",
                 "company": [],
+                "uicolor": [],
                 "polyline": "121,31;121.1,31.1",
                 "busstops": [
                     {"id": "S1", "name": "A", "location": "121,31", "sequence": "1"}
@@ -76,6 +77,28 @@ def test_line_parser_normalizes_empty_company_array_to_none() -> None:
     line = parse_line_response(payload)[0]
 
     assert line.company_name is None
+    assert line.ui_color is None
+
+
+def test_line_parser_keeps_ui_color() -> None:
+    payload = {
+        "status": "1",
+        "buslines": [
+            {
+                "id": "L1",
+                "name": "测试线(A--B)",
+                "uicolor": "#009944",
+                "polyline": "121,31;121.1,31.1",
+                "busstops": [
+                    {"id": "S1", "name": "A", "location": "121,31", "sequence": "1"}
+                ],
+            }
+        ],
+    }
+
+    line = parse_line_response(payload)[0]
+
+    assert line.ui_color == "#009944"
 
 
 def test_line_parser_rejects_non_contiguous_stop_sequence() -> None:

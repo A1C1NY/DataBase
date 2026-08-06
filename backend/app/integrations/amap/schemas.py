@@ -61,6 +61,7 @@ class AmapBusLineDTO(AmapDTO):
     basic_price: str | None = None
     total_price: str | None = None
     bounds: str | None = None
+    uicolor: str | None = None
     busstops: list[AmapBusStopDTO] = Field(default_factory=list)
 
     @field_validator(
@@ -80,6 +81,7 @@ class AmapBusLineDTO(AmapDTO):
         "name",
         "company",
         "bounds",
+        "uicolor",
         mode="before",
     )
     @classmethod

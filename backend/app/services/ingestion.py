@@ -417,6 +417,7 @@ class IngestionService:
         line.basic_price = parsed.basic_price
         line.total_price = parsed.total_price
         line.bounds_raw = parsed.bounds_raw
+        line.ui_color = parsed.ui_color
         line.polyline_raw = parsed.polyline_raw
         line.last_ingestion_run_id = ingestion_run_id
         session.flush()

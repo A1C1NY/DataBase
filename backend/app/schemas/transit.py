@@ -39,6 +39,7 @@ class LineItem(TransitSchema):
     distance_km: Decimal | None
     basic_price: Decimal | None
     total_price: Decimal | None
+    ui_color: str | None
 
 
 class LineStopItem(TransitSchema):

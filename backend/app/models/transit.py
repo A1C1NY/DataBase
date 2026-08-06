@@ -119,6 +119,7 @@ class BusLine(TimestampMixin, Base):
     basic_price: Mapped[Decimal | None] = mapped_column(DECIMAL(8, 2), nullable=True)
     total_price: Mapped[Decimal | None] = mapped_column(DECIMAL(8, 2), nullable=True)
     bounds_raw: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    ui_color: Mapped[str | None] = mapped_column(String(16), nullable=True)
     polyline_raw: Mapped[str] = mapped_column(MEDIUMTEXT, nullable=False)
     last_ingestion_run_id: Mapped[int | None] = mapped_column(
         BIGINT_UNSIGNED,
