@@ -109,12 +109,11 @@ class IngestionService:
         trigger_type: TriggerType,
         request_keyword: str | None,
         city_code: str | None,
+        ingestion_run_id: int | None = None,
     ) -> ImportOutcome:
-        run_id = self._create_run(
-            endpoint="stopname",
-            trigger_type=trigger_type,
-            request_keyword=request_keyword,
-            city_code=city_code,
+        run_id = ingestion_run_id or self._create_run(
+            endpoint="stopname", trigger_type=trigger_type,
+            request_keyword=request_keyword, city_code=city_code,
         )
         try:
             parsed_stops = parse_stop_response(response)
@@ -168,15 +167,19 @@ class IngestionService:
         trigger_type: TriggerType,
         request_keyword: str | None,
         city_code: str | None,
+        amap_line_ids: set[str] | None = None,
+        ingestion_run_id: int | None = None,
     ) -> ImportOutcome:
-        run_id = self._create_run(
-            endpoint="linename",
-            trigger_type=trigger_type,
-            request_keyword=request_keyword,
-            city_code=city_code,
+        run_id = ingestion_run_id or self._create_run(
+            endpoint="linename", trigger_type=trigger_type,
+            request_keyword=request_keyword, city_code=city_code,
         )
         try:
             parsed_lines = parse_line_response(response)
+            if amap_line_ids is not None:
+                parsed_lines = [
+                    line for line in parsed_lines if line.amap_line_id in amap_line_ids
+                ]
         except Exception as exc:
             self._finish_failed_run(run_id, exc)
             raise IngestionError(f"高德线路响应解析失败: {exc}") from exc
@@ -225,7 +228,7 @@ class IngestionService:
     def _create_run(
         self,
         *,
-        endpoint: Literal["stopname", "linename"],
+        endpoint: Literal["stopname", "linename", "lineid"],
         trigger_type: TriggerType,
         request_keyword: str | None,
         city_code: str | None,
@@ -323,16 +326,57 @@ class IngestionService:
             )
             session.add(stop)
         else:
-            if parsed.amap_stop_id and stop.amap_stop_id is None:
-                stop.amap_stop_id = parsed.amap_stop_id
-            stop.stop_name = parsed.stop_name
-            stop.normalized_name = parsed.normalized_name
-            stop.longitude = parsed.longitude
-            stop.latitude = parsed.latitude
-            stop.city_code = parsed_city_code or fallback_city_code or stop.city_code
-            stop.last_ingestion_run_id = ingestion_run_id
+            # A line response may use direction-specific boarding coordinates for an
+            # existing stop. Only the canonical stop response may replace its identity.
+            if isinstance(parsed, ParsedStop):
+                if parsed.amap_stop_id and stop.amap_stop_id is None:
+                    stop.amap_stop_id = parsed.amap_stop_id
+                stop.stop_name = parsed.stop_name
+                stop.normalized_name = parsed.normalized_name
+                stop.longitude = parsed.longitude
+                stop.latitude = parsed.latitude
+                stop.city_code = parsed_city_code or fallback_city_code or stop.city_code
+                stop.last_ingestion_run_id = ingestion_run_id
         session.flush()
+        if isinstance(parsed, ParsedStop):
+            confirmed_ids = set(
+                session.scalars(
+                    select(BusLine.amap_line_id)
+                    .join(BusLineStop, BusLineStop.line_id == BusLine.id)
+                    .where(BusLineStop.stop_id == stop.id)
+                )
+            )
+            unresolved = [
+                {
+                    "amap_line_id": summary.amap_line_id,
+                    "line_name": summary.line_name,
+                    "amap_name": summary.amap_name,
+                    "start_stop_name": summary.start_stop_name,
+                    "end_stop_name": summary.end_stop_name,
+                    "reason": None,
+                }
+                for summary in parsed.line_summaries
+                if summary.amap_line_id not in confirmed_ids
+            ]
+            stop.unresolved_line_summaries = unresolved or None
+            stop.line_membership_status = "partial" if unresolved else "complete"
+            stop.lines_checked_at = to_mysql_datetime(now_shanghai())
         return stop, inserted
+
+    @staticmethod
+    def _confirm_line_summary(stop: BusStop, amap_line_id: str) -> None:
+        if stop.unresolved_line_summaries is None:
+            return
+        remaining = [
+            summary
+            for summary in stop.unresolved_line_summaries
+            if summary.get("amap_line_id") != amap_line_id
+        ]
+        if len(remaining) == len(stop.unresolved_line_summaries):
+            return
+        stop.unresolved_line_summaries = remaining or None
+        stop.line_membership_status = "partial" if remaining else "complete"
+        stop.lines_checked_at = to_mysql_datetime(now_shanghai())
 
     def _upsert_line(
         self,
@@ -405,6 +449,7 @@ class IngestionService:
                     ingestion_run_id=ingestion_run_id,
                 )
             )
+            self._confirm_line_summary(stop, parsed.amap_line_id)
         stats.inserted_count += len(parsed.stops)
 
         session.add_all(

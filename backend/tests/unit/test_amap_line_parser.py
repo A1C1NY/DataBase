@@ -57,6 +57,27 @@ def test_line_parser_turns_bad_optional_values_into_warnings() -> None:
     assert len(line.warnings) == 3
 
 
+def test_line_parser_normalizes_empty_company_array_to_none() -> None:
+    payload = {
+        "status": "1",
+        "buslines": [
+            {
+                "id": "L1",
+                "name": "测试线(A--B)",
+                "company": [],
+                "polyline": "121,31;121.1,31.1",
+                "busstops": [
+                    {"id": "S1", "name": "A", "location": "121,31", "sequence": "1"}
+                ],
+            }
+        ],
+    }
+
+    line = parse_line_response(payload)[0]
+
+    assert line.company_name is None
+
+
 def test_line_parser_rejects_non_contiguous_stop_sequence() -> None:
     payload = {
         "status": "1",
@@ -92,4 +113,3 @@ def test_line_parser_rejects_mismatched_reverse_direction() -> None:
         parse_line_response(
             {"status": "1", "buslines": [line("L1", "L2"), line("L2", "L3")]}
         )
-

@@ -23,7 +23,9 @@ class IngestionRun(Base):
     )
 
     id: Mapped[int] = mapped_column(BIGINT_UNSIGNED, primary_key=True, autoincrement=True)
-    endpoint: Mapped[str] = mapped_column(ENUM("stopname", "linename"), nullable=False)
+    endpoint: Mapped[str] = mapped_column(
+        ENUM("stopname", "linename", "lineid"), nullable=False
+    )
     trigger_type: Mapped[str] = mapped_column(
         ENUM("sample_import", "manual", "user_request"), nullable=False
     )

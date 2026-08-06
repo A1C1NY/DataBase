@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     CheckConstraint,
     ForeignKey,
@@ -66,6 +67,9 @@ class BusStop(TimestampMixin, Base):
         server_default=text("'unknown'"),
     )
     lines_checked_at: Mapped[datetime | None] = mapped_column(DATETIME(fsp=3), nullable=True)
+    unresolved_line_summaries: Mapped[list[dict[str, str | None]] | None] = mapped_column(
+        JSON, nullable=True
+    )
     last_ingestion_run_id: Mapped[int | None] = mapped_column(
         BIGINT_UNSIGNED,
         ForeignKey(

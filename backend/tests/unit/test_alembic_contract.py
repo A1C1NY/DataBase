@@ -6,14 +6,18 @@ from alembic.script import ScriptDirectory
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_alembic_has_one_initial_revision() -> None:
+def test_alembic_revision_chain_has_expected_head() -> None:
     config = Config(BACKEND_ROOT / "alembic.ini")
     script = ScriptDirectory.from_config(config)
     revisions = list(script.walk_revisions())
 
-    assert script.get_heads() == ["20260805_01"]
-    assert len(revisions) == 1
-    assert revisions[0].down_revision is None
+    assert script.get_heads() == ["20260806_03"]
+    assert [revision.revision for revision in revisions] == [
+        "20260806_03",
+        "20260806_02",
+        "20260805_01",
+    ]
+    assert revisions[-1].down_revision is None
 
 
 def test_initial_migration_names_all_nine_tables() -> None:

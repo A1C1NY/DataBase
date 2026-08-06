@@ -76,6 +76,10 @@ class AmapBusLineDTO(AmapDTO):
         "distance",
         "basic_price",
         "total_price",
+        "type",
+        "name",
+        "company",
+        "bounds",
         mode="before",
     )
     @classmethod
@@ -107,4 +111,3 @@ class AmapLineResponseDTO(AmapDTO):
     @classmethod
     def stringify_response_scalars(cls, value: Any) -> str | None:
         return _string_or_none(value)
-

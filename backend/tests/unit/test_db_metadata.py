@@ -38,6 +38,7 @@ EXPECTED_COLUMNS = {
         "city_code",
         "line_membership_status",
         "lines_checked_at",
+        "unresolved_line_summaries",
         "last_ingestion_run_id",
         "is_active",
         "created_at",
@@ -119,6 +120,7 @@ EXPECTED_NULLABLE_COLUMNS = {
         "amap_stop_id",
         "city_code",
         "lines_checked_at",
+        "unresolved_line_summaries",
         "last_ingestion_run_id",
     },
     "bus_lines": {

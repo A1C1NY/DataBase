@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     amap_api_url: AnyHttpUrl = AnyHttpUrl("https://restapi.amap.com/")
     amap_api_key: SecretStr | None = None
     upstream_timeout_seconds: float = Field(default=10.0, ge=1.0, le=60.0)
+    amap_min_request_interval_seconds: float = Field(default=1.0, ge=0.0, le=10.0)
+    amap_line_id_min_request_interval_seconds: float = Field(
+        default=0.04, ge=0.0, le=10.0
+    )
+    amap_rate_limit_retries: int = Field(default=3, ge=0, le=5)
+    amap_rate_limit_backoff_seconds: float = Field(default=0.5, ge=0.0, le=10.0)
     city_code: str = Field(default="021", pattern=r"^[0-9]{3,6}$")
 
     cors_origins: list[AnyHttpUrl] = Field(
