@@ -1,4 +1,4 @@
-"""Minimal application assembly for the stage 6 transit API."""
+"""Application assembly for transit, authentication, and favorite APIs."""
 
 from fastapi import FastAPI
 
