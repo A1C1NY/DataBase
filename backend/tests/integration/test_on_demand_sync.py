@@ -26,6 +26,7 @@ from app.services.on_demand_sync import (
     TransitNotFound,
     TransitUpstreamError,
 )
+from app.services.transit import TransitService
 
 
 class _EmptySession(AbstractContextManager["_EmptySession"]):
@@ -45,11 +46,12 @@ class _EmptyFactory:
 
 
 class _IngestionTracker:
-    def __init__(self) -> None:
+    def __init__(self, expected_endpoint: str = "lineid") -> None:
         self.failed: list[tuple[int, str]] = []
+        self.expected_endpoint = expected_endpoint
 
     def _create_run(self, **kwargs: object) -> int:
-        assert kwargs["endpoint"] == "lineid"
+        assert kwargs["endpoint"] == self.expected_endpoint
         return 901
 
     def _finish_failed_run(self, run_id: int, error: Exception, **kwargs: object) -> None:
@@ -76,16 +78,57 @@ def _service(
     transport: httpx.MockTransport | None,
     *,
     api_key: str | None = "test-amap-key",
+    expected_endpoint: str = "lineid",
 ) -> tuple[OnDemandSyncService, _IngestionTracker, httpx.Client | None]:
     http_client = httpx.Client(transport=transport) if transport is not None else None
     service = OnDemandSyncService(
         _EmptyFactory(),  # type: ignore[arg-type]
         AmapClient(_settings(api_key=api_key), http_client),
     )
-    tracker = _IngestionTracker()
+    tracker = _IngestionTracker(expected_endpoint)
     service.ingestion = tracker  # type: ignore[assignment]
     service._record_line_summary_reason = lambda *args, **kwargs: None  # type: ignore[method-assign]
     return service, tracker, http_client
+
+
+def test_line_name_search_uses_linename_and_returns_imported_rows(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json={"status": "1", "count": "0", "buslines": []})
+
+    service, _, client = _service(
+        httpx.MockTransport(handler), expected_endpoint="linename"
+    )
+    line = BusLine(
+        id=19,
+        amap_line_id="310100024547",
+        line_name="576路",
+        amap_name="576路(曲阳路玉田路--芦恒路枢纽站)",
+        city_code="021",
+        polyline_raw="121.1,31.1;121.2,31.2",
+    )
+    results = iter([[], [line]])
+    monkeypatch.setattr(
+        TransitService,
+        "search_lines",
+        lambda self, query, city_code, limit: next(results),
+    )
+    try:
+        items, run_id = service.search_lines(query="576路", city_code="021", limit=20)
+    finally:
+        assert client is not None
+        client.close()
+
+    assert items == [line]
+    assert run_id == 901
+    assert requests[0].url.path.endswith("/v3/bus/linename")
+    assert requests[0].url.params["keywords"] == "576路"
+    assert requests[0].url.params["city"] == "021"
+    assert requests[0].url.params["extensions"] == "all"
 
 
 def test_lineid_empty_result_becomes_not_found_after_amap() -> None:

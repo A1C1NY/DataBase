@@ -1,6 +1,6 @@
 """Read-only database queries and response construction for transit data."""
 
-from sqlalchemy import Select, select
+from sqlalchemy import Select, func, or_, select
 from sqlalchemy.orm import Session, joinedload
 
 from app.geo.coord import gcj02_to_wgs84
@@ -85,6 +85,37 @@ class TransitService:
         return self.session.scalar(
             self._active_line_query().where(BusLine.amap_line_id == amap_line_id)
         )
+
+    def search_lines(self, query: str, city_code: str, limit: int) -> list[BusLine]:
+        keyword = query.strip()
+        if not keyword:
+            return []
+        statement = (
+            self._active_line_query()
+            .where(
+                BusLine.city_code == city_code,
+                or_(
+                    BusLine.line_name.contains(keyword),
+                    BusLine.amap_name.contains(keyword),
+                ),
+            )
+            .order_by(BusLine.line_name, BusLine.id)
+            .limit(limit)
+        )
+        return list(self.session.scalars(statement))
+
+    def is_line_complete(self, line: BusLine) -> bool:
+        if not line.polyline_raw.strip():
+            return False
+        stop_count = self.session.scalar(
+            select(func.count()).select_from(BusLineStop).where(BusLineStop.line_id == line.id)
+        )
+        path_count = self.session.scalar(
+            select(func.count())
+            .select_from(BusLinePathPoint)
+            .where(BusLinePathPoint.line_id == line.id)
+        )
+        return (stop_count or 0) >= 1 and (path_count or 0) >= 2
 
     def get_line_stops(self, line_id: int) -> list[BusLineStop]:
         statement = (

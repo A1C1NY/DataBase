@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.logging import redact_sensitive
 from app.core.time import now_shanghai, to_mysql_datetime
 from app.integrations.amap.client import AmapClient, AmapClientError
-from app.models.transit import BusStop
+from app.models.transit import BusLine, BusStop
 from app.services.ingestion import IngestionError, IngestionService
 from app.services.transit import TransitService
 
@@ -96,6 +96,36 @@ class OnDemandSyncService:
             raise TransitNotFound("高德和本地数据库均未找到站点")
         return items, outcome.ingestion_run_id
 
+    def search_lines(
+        self, *, query: str, city_code: str, limit: int
+    ) -> tuple[list[BusLine], int | None]:
+        with self.session_factory() as session:
+            local = TransitService(session).search_lines(query, city_code, limit)
+            if local:
+                return local, None
+
+        response, run_id = self._request(
+            "linename",
+            query,
+            city_code,
+            lambda: self.amap_client.query_line(keywords=query, city=city_code),
+        )
+        try:
+            outcome = self.ingestion.import_line_response(
+                response,
+                trigger_type="user_request",
+                request_keyword=query,
+                city_code=city_code,
+                ingestion_run_id=run_id,
+            )
+        except IngestionError as exc:
+            raise self._ingestion_failure(exc) from exc
+        with self.session_factory() as session:
+            items = TransitService(session).search_lines(query, city_code, limit)
+        if not items:
+            raise TransitNotFound("高德和本地数据库均未找到线路")
+        return items, outcome.ingestion_run_id
+
     def _record_line_summary_reason(self, amap_line_id: str, reason: str) -> None:
         safe_reason = redact_sensitive(reason)[:500]
         with self.session_factory() as session, session.begin():
@@ -115,10 +145,11 @@ class OnDemandSyncService:
                     stop.unresolved_line_summaries = updated
                     stop.lines_checked_at = to_mysql_datetime(now_shanghai())
 
-    def backfill_line(self, *, amap_line_id: str) -> int:
+    def backfill_line(self, *, amap_line_id: str, refresh: bool = False) -> int:
         with self.session_factory() as session:
-            existing = TransitService(session).get_line_by_amap_id(amap_line_id)
-            if existing is not None:
+            transit = TransitService(session)
+            existing = transit.get_line_by_amap_id(amap_line_id)
+            if existing is not None and not refresh and transit.is_line_complete(existing):
                 return 0
         try:
             response, run_id = self._request(

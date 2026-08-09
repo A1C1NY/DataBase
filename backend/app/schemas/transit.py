@@ -62,6 +62,12 @@ class StopSearchResponse(TransitSchema):
     items: list[StopItem]
 
 
+class LineSearchResponse(TransitSchema):
+    data_source: DataSource
+    ingestion_run_id: int | None = None
+    items: list[LineItem]
+
+
 class StopResponse(TransitSchema):
     data_source: DataSource
     ingestion_run_id: int | None = None

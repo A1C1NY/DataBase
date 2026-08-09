@@ -11,7 +11,7 @@ from fastapi import HTTPException
 
 from app.api.routes import lines as line_routes
 from app.api.routes import stops as stop_routes
-from app.models.transit import BusStop
+from app.models.transit import BusLine, BusStop
 from app.services.on_demand_sync import TransitNotFound, TransitUpstreamError
 
 
@@ -81,8 +81,44 @@ class _RaisingSync:
     def __init__(self, error: Exception) -> None:
         self.error = error
 
-    def backfill_line(self, *, amap_line_id: str) -> int:
+    def backfill_line(self, *, amap_line_id: str, refresh: bool = False) -> int:
         raise self.error
+
+
+class _RefreshSync:
+    def __init__(self) -> None:
+        self.refresh: bool | None = None
+
+    def backfill_line(self, *, amap_line_id: str, refresh: bool = False) -> int:
+        self.refresh = refresh
+        return 77
+
+
+def test_line_by_amap_forwards_explicit_refresh(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sync = _RefreshSync()
+    line = BusLine(
+        id=19,
+        amap_line_id="310100024547",
+        line_name="576路",
+        amap_name="576路(曲阳路玉田路--芦恒路枢纽站)",
+        city_code="021",
+        polyline_raw="121.1,31.1;121.2,31.2",
+    )
+    monkeypatch.setattr(line_routes, "get_session_factory", lambda: _Factory())
+    monkeypatch.setattr(line_routes, "_sync", lambda: sync)
+    monkeypatch.setattr(
+        line_routes.TransitService,
+        "get_line_by_amap_id",
+        lambda self, line_id: line,
+    )
+
+    body = line_routes.get_line_by_amap("310100024547", refresh=True)
+
+    assert sync.refresh is True
+    assert body.data_source == "amap"
+    assert body.ingestion_run_id == 77
 
 
 @pytest.mark.parametrize(
