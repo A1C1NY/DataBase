@@ -1,11 +1,14 @@
 """Stop search and stop-line endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from typing import Annotated
 
+from fastapi import APIRouter, HTTPException, Query
+
+from app.api.dependencies import OptionalCurrentUser, SessionDep
 from app.core.config import get_settings
-from app.db.session import get_session, get_session_factory
+from app.db.session import get_session_factory
 from app.integrations.amap.client import AmapClient
+from app.schemas.events import StopViewEntryPoint
 from app.schemas.transit import (
     StopItem,
     StopLinesResponse,
@@ -18,6 +21,7 @@ from app.services.on_demand_sync import (
     TransitUpstreamError,
 )
 from app.services.transit import TransitService
+from app.services.view_events import StopViewEventService
 
 router = APIRouter(prefix="/stops", tags=["stops"])
 
@@ -56,9 +60,14 @@ def search_stops(
 
 @router.get("/{stop_id}", response_model=StopResponse)
 def get_stop(
-    stop_id: int, session: Session = Depends(get_session)  # noqa: B008
+    stop_id: int,
+    session: SessionDep,
+    user: OptionalCurrentUser,
+    entry_point: Annotated[StopViewEntryPoint, Query()] = StopViewEntryPoint.DIRECT,
 ) -> StopResponse:
-    stop = TransitService(session).get_stop(stop_id)
+    stop = StopViewEventService(session).open_stop_detail(
+        stop_id, entry_point=entry_point, user=user
+    )
     if stop is None:
         raise HTTPException(status_code=404, detail={"code": "NOT_FOUND", "message": "站点不存在"})
     return StopResponse(data_source="database", stop=StopItem.model_validate(stop))

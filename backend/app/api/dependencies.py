@@ -12,6 +12,9 @@ from app.db.session import get_session
 from app.models.account import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+optional_oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/auth/login", auto_error=False
+)
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
@@ -42,6 +45,20 @@ def get_current_user(
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+def get_optional_current_user(
+    session: SessionDep,
+    token: Annotated[str | None, Depends(optional_oauth2_scheme)],
+) -> User | None:
+    """Resolve an optional bearer token without requiring authentication."""
+
+    if token is None:
+        return None
+    return get_current_user(session, token)
+
+
+OptionalCurrentUser = Annotated[User | None, Depends(get_optional_current_user)]
 
 
 def require_roles(*allowed_roles: str) -> Callable[..., User]:
