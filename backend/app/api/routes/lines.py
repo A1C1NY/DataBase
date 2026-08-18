@@ -36,6 +36,7 @@ def search_lines(
     q: str = Query(min_length=1, max_length=150),
     city_code: str = Query(default="021", pattern=r"^[0-9]{3,6}$"),
     limit: int = Query(default=20, ge=1, le=100),
+    refresh: bool = Query(default=False, description="强制从高德刷新并增量入库"),
 ) -> LineSearchResponse:
     if not q.strip():
         raise HTTPException(
@@ -43,7 +44,9 @@ def search_lines(
             detail={"code": "INVALID_REQUEST", "message": "查询关键词不能为空"},
         )
     try:
-        items, run_id = _sync().search_lines(query=q, city_code=city_code, limit=limit)
+        items, run_id = _sync().search_lines(
+            query=q, city_code=city_code, limit=limit, refresh=refresh
+        )
     except (TransitNotFound, TransitUpstreamError) as exc:
         _raise(exc)
     return LineSearchResponse(

@@ -73,10 +73,12 @@ class OnDemandSyncService:
             "AMAP_UNAVAILABLE", str(exc), status_code=503
         )
 
-    def search_stops(self, *, query: str, city_code: str, limit: int) -> tuple[list[BusStop], int | None]:
+    def search_stops(
+        self, *, query: str, city_code: str, limit: int, refresh: bool = False
+    ) -> tuple[list[BusStop], int | None]:
         with self.session_factory() as session:
             local = TransitService(session).search_stops(query, city_code, limit)
-            if local:
+            if local and not refresh:
                 return local, None
 
         response, run_id = self._request(
@@ -97,11 +99,11 @@ class OnDemandSyncService:
         return items, outcome.ingestion_run_id
 
     def search_lines(
-        self, *, query: str, city_code: str, limit: int
+        self, *, query: str, city_code: str, limit: int, refresh: bool = False
     ) -> tuple[list[BusLine], int | None]:
         with self.session_factory() as session:
             local = TransitService(session).search_lines(query, city_code, limit)
-            if local:
+            if local and not refresh:
                 return local, None
 
         response, run_id = self._request(
