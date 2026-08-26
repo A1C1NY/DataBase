@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德公交站点与线路查询分析系统</title>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 通知横幅 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="header-content">
+            <h1>公交查询系统</h1>
+            <div class="user-info">
+                <span id="username"></span>
+                <button id="logoutBtn" class="btn btn-secondary" style="display:none;">退出登录</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 登录/注册界面 -->
+    <div id="authPage" class="page">
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2 id="authTitle">登录</h2>
+                <form id="authForm">
+                    <input type="text" id="authUsername" placeholder="用户名" required>
+                    <input type="password" id="authPassword" placeholder="密码" required>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </form>
+                <p class="auth-toggle">
+                    <span id="authToggleText">没有账号？</span>
+                    <a href="#" id="authToggleLink">立即注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div id="appPage" class="page" style="display:none;">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <nav class="nav">
+                <a href="#" class="nav-item active" data-page="search">站点搜索</a>
+                <a href="#" class="nav-item" data-page="favorites">我的收藏</a>
+                <a href="#" class="nav-item analyst-only" data-page="heatmap">热力图</a>
+                <a href="#" class="nav-item analyst-only" data-page="analytics">访问统计</a>
+                <a href="#" class="nav-item admin-only" data-page="admin">用户管理</a>
+                <a href="#" class="nav-item admin-only" data-page="ingestion">导入记录</a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 站点搜索页面 -->
+            <div id="searchPage" class="content-page active">
+                <div class="search-section">
+                    <h2>搜索公交信息</h2>
+                    <div class="search-box">
+                        <select id="searchType">
+                            <option value="stop">搜索站点</option>
+                            <option value="line">搜索线路</option>
+                        </select>
+                        <input type="text" id="searchInput" placeholder="输入站点名称">
+                        <input type="text" id="cityCode" placeholder="城市编码 (可选)" value="021">
+                        <label style="margin-left: 10px;">
+                            <input type="checkbox" id="refreshFromAmap"> 从高德刷新
+                        </label>
+                        <button id="searchBtn" class="btn btn-primary">搜索</button>
+                    </div>
+                </div>
+
+                <div class="split-view">
+                    <div class="list-section">
+                        <h3>搜索结果</h3>
+                        <div id="searchResults"></div>
+                    </div>
+                    <div class="map-section">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏页面 -->
+            <div id="favoritesPage" class="content-page">
+                <h2>我的收藏</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="favoriteStops">收藏站点</button>
+                    <button class="tab-btn" data-tab="favoriteLines">收藏线路</button>
+                </div>
+                <div id="favoriteStops" class="tab-content active"></div>
+                <div id="favoriteLines" class="tab-content"></div>
+            </div>
+
+            <!-- 热力图页面 -->
+            <div id="heatmapPage" class="content-page">
+                <h2>密度热力图</h2>
+                <div class="controls">
+                    <select id="heatmapType">
+                        <option value="stops">站点密度</option>
+                        <option value="lines">线路密度</option>
+                    </select>
+                    <input type="number" id="gridSize" placeholder="网格大小(米)" value="300" min="100" max="2000">
+                    <button id="loadHeatmap" class="btn btn-primary">加载热力图</button>
+                </div>
+                <div id="heatmapContainer" class="map-container">
+                    <div id="heatmap"></div>
+                </div>
+            </div>
+
+            <!-- 访问统计页面 -->
+            <div id="analyticsPage" class="content-page">
+                <h2>访问统计分析</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="popularity">站点访问排行</button>
+                    <button class="tab-btn" data-tab="distribution">访问时间分布</button>
+                </div>
+
+                <div id="popularity" class="tab-content active">
+                    <div class="controls">
+                        <input type="datetime-local" id="popStartTime">
+                        <input type="datetime-local" id="popEndTime">
+                        <input type="number" id="popLimit" placeholder="数量" value="20" min="1" max="100">
+                        <button id="loadPopularity" class="btn btn-primary">查询</button>
+                    </div>
+                    <div id="popularityResults"></div>
+                </div>
+
+                <div id="distribution" class="tab-content">
+                    <div class="controls">
+                        <input type="number" id="distStopId" placeholder="站点ID" required>
+                        <input type="datetime-local" id="distStartTime">
+                        <input type="datetime-local" id="distEndTime">
+                        <select id="distBucket">
+                            <option value="hour">按小时</option>
+                            <option value="date">按日期</option>
+                            <option value="weekday">按星期</option>
+                        </select>
+                        <button id="loadDistribution" class="btn btn-primary">查询</button>
+                    </div>
+                    <div id="distributionResults"></div>
+                </div>
+            </div>
+
+            <!-- 用户管理页面 -->
+            <div id="adminPage" class="content-page">
+                <h2>用户管理</h2>
+                <button id="createUserBtn" class="btn btn-primary">创建用户</button>
+                <div id="usersTable"></div>
+
+                <!-- 创建/编辑用户模态框 -->
+                <div id="userModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2 id="userModalTitle">创建用户</h2>
+                        <form id="userForm">
+                            <input type="text" id="userUsername" placeholder="用户名" required>
+                            <input type="password" id="userPassword" placeholder="密码" required>
+                            <select id="userRole">
+                                <option value="passenger">普通用户</option>
+                                <option value="analyst">分析师</option>
+                                <option value="admin">管理员</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导入记录页面 -->
+            <div id="ingestionPage" class="content-page">
+                <h2>导入记录</h2>
+                <div id="ingestionTable"></div>
+            </div>
+        </main>
+
+        <!-- 站点详情模态框 -->
+        <div id="stopModal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2 id="stopName"></h2>
+                <div id="stopDetails"></div>
+                <div class="split-view">
+                    <div class="list-section">
+                        <h3>途经线路</h3>
+                        <div id="stopLines"></div>
+                    </div>
+                    <div class="map-section">
+                        <div id="stopMap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 线路详情模态框 -->
+        <div id="lineModal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2 id="lineName"></h2>
+                <div id="lineDetails"></div>
+                <div class="split-view">
+                    <div class="list-section">
+                        <h3>站点列表</h3>
+                        <div id="lineStops"></div>
+                    </div>
+                    <div class="map-section">
+                        <div id="lineMap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
