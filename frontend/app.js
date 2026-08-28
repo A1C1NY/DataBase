@@ -5,6 +5,8 @@ let currentUser = null;
 let mainMap = null;
 let lineMapInstance = null;
 let heatmapInstance = null;
+let heatmapAutoRefresh = false;
+let heatmapRefreshTimer = null;
 
 // 工具函数：显示通知
 function showNotification(message, type = 'info') {
@@ -64,7 +66,7 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 // 初始化地图
-function initMap(containerId, center = [117.2272, 31.8206]) {
+function initMap(containerId, center = [121.4751080, 31.2326870]) {
     const map = new maplibregl.Map({
         container: containerId,
         style: {
@@ -259,7 +261,15 @@ function loadPageData(page) {
             if (!heatmapInstance) {
                 setTimeout(() => {
                     heatmapInstance = initMap('heatmap');
+                    heatmapInstance.resize();
+                    heatmapInstance.on('moveend', () => {
+                        if (!heatmapAutoRefresh) return;
+                        clearTimeout(heatmapRefreshTimer);
+                        heatmapRefreshTimer = setTimeout(() => loadHeatmapData(false), 250);
+                    });
                 }, 100);
+            } else {
+                setTimeout(() => heatmapInstance.resize(), 0);
             }
             break;
         case 'admin':
@@ -1071,9 +1081,81 @@ async function loadFavorites() {
 }
 
 // 热力图
-document.getElementById('loadHeatmap')?.addEventListener('click', async () => {
+const STOP_HEATMAP_CLOSE_ZOOM = 12;
+const LINE_HEATMAP_CLOSE_ZOOM = 12;
+const STOP_HEATMAP_TRANSITION_ZOOM = 4;
+const LINE_HEATMAP_TRANSITION_ZOOM = 4;
+
+function heatmapProgress(zoom, closeZoom, transitionZoom) {
+    const farZoom = closeZoom - transitionZoom;
+    return Math.max(0, Math.min(1, (zoom - farZoom) / transitionZoom));
+}
+
+function getStopHeatmapPaint(zoom) {
+    const progress = heatmapProgress(
+        zoom,
+        STOP_HEATMAP_CLOSE_ZOOM,
+        STOP_HEATMAP_TRANSITION_ZOOM
+    );
+    const lerp = (farValue, closeValue) => farValue + (closeValue - farValue) * progress;
+
+    // 站点参数独立维护：保持当前站点图的显示效果。
+    return {
+        'heatmap-weight': ['*', ['get', 'weight'], lerp(0.55, 1)],
+        'heatmap-intensity': lerp(0.5, 0.95),
+        'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(9,31,95,0.7)',
+            0.1, 'rgba(9,31,95,0.76)',
+            0.25, 'rgba(0,105,148,0.82)',
+            0.4, 'rgba(0,156,96,0.86)',
+            0.55, 'rgba(102,190,56,0.7)',
+            0.7, 'rgba(226,211,29,0.76)',
+            0.84, 'rgba(255,133,0,0.84)',
+            1, 'rgba(211,32,32,0.9)'
+        ],
+        'heatmap-radius': lerp(14, 20),
+        'heatmap-opacity': lerp(0.89, 0.98)
+    };
+}
+
+function getLineHeatmapPaint(zoom) {
+    const progress = heatmapProgress(
+        zoom,
+        LINE_HEATMAP_CLOSE_ZOOM,
+        LINE_HEATMAP_TRANSITION_ZOOM
+    );
+    const lerp = (farValue, closeValue) => farValue + (closeValue - farValue) * progress;
+
+    // 线路参数独立维护：线路过红时只调整这里，不影响站点图。
+    return {
+        'heatmap-weight': ['*', ['get', 'weight'], lerp(0.20, 0.50)],
+        'heatmap-intensity': lerp(0.2, 0.35),
+        'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(9,31,95,0.7)',
+            0.1, 'rgba(9,31,95,0.76)',
+            0.25, 'rgba(0,105,148,0.82)',
+            0.4, 'rgba(0,156,96,0.86)',
+            0.55, 'rgba(102,190,56,0.7)',
+            0.7, 'rgba(226,211,29,0.76)',
+            0.84, 'rgba(255,133,0,0.84)',
+            1, 'rgba(211,32,32,0.9)'
+        ],
+        'heatmap-radius': lerp(7, 10),
+        'heatmap-opacity': lerp(0.89, 0.98)
+    };
+}
+
+function getHeatmapPaint(type, zoom) {
+    return type === 'stops'
+        ? getStopHeatmapPaint(zoom)
+        : getLineHeatmapPaint(zoom);
+}
+
+async function loadHeatmapData(showSuccess = true) {
     const type = document.getElementById('heatmapType').value;
-    const gridSize = document.getElementById('gridSize').value;
+    const requestedGridSize = Number(document.getElementById('gridSize').value) || 100;
 
     if (!heatmapInstance) {
         showNotification('地图未初始化', 'error');
@@ -1082,16 +1164,40 @@ document.getElementById('loadHeatmap')?.addEventListener('click', async () => {
 
     const bounds = heatmapInstance.getBounds();
     const bbox = `${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`;
+    const zoom = heatmapInstance.getZoom();
+    // Finer aggregation at closer zoom levels keeps individual stops and line segments distinct.
+    const gridSize = zoom >= 14
+        ? Math.min(requestedGridSize, 75)
+        : zoom >= 12
+            ? Math.min(requestedGridSize, 100)
+            : requestedGridSize;
 
     try {
         const endpoint = type === 'stops'
             ? `/analytics/heatmaps/stops?bbox=${bbox}&grid_size_m=${gridSize}`
             : `/analytics/heatmaps/lines?bbox=${bbox}&grid_size_m=${gridSize}`;
 
-        const geojson = await apiRequest(endpoint);
+        const response = await apiRequest(endpoint);
+        const geojson = response.geojson || response;
+        const heatmapPaint = getHeatmapPaint(type, zoom);
+
+        if (!geojson?.features?.length) {
+            if (showSuccess) {
+                showNotification('当前地图范围内没有可显示的数据，请移动或缩放地图后重试', 'info');
+            }
+            if (heatmapInstance.getSource('heatmap-data')) {
+                heatmapInstance.getSource('heatmap-data').setData(geojson);
+            }
+            return;
+        }
 
         if (heatmapInstance.getSource('heatmap-data')) {
             heatmapInstance.getSource('heatmap-data').setData(geojson);
+            if (heatmapInstance.getLayer('heatmap-layer')) {
+                Object.entries(heatmapPaint).forEach(([property, value]) => {
+                    heatmapInstance.setPaintProperty('heatmap-layer', property, value);
+                });
+            }
         } else {
             heatmapInstance.addSource('heatmap-data', {
                 type: 'geojson',
@@ -1102,28 +1208,26 @@ document.getElementById('loadHeatmap')?.addEventListener('click', async () => {
                 id: 'heatmap-layer',
                 type: 'heatmap',
                 source: 'heatmap-data',
-                paint: {
-                    'heatmap-weight': ['get', 'weight'],
-                    'heatmap-intensity': 1,
-                    'heatmap-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['heatmap-density'],
-                        0, 'rgba(33,102,172,0)',
-                        0.2, 'rgb(103,169,207)',
-                        0.4, 'rgb(209,229,240)',
-                        0.6, 'rgb(253,219,199)',
-                        0.8, 'rgb(239,138,98)',
-                        1, 'rgb(178,24,43)'
-                    ],
-                    'heatmap-radius': 30
-                }
+                paint: heatmapPaint
             });
         }
 
-        showNotification('热力图加载成功', 'success');
+        if (showSuccess) {
+            showNotification(`热力图加载成功，共 ${geojson.features.length} 个网格`, 'success');
+        }
     } catch (error) {
-        showNotification('加载热力图失败', 'error');
+        if (showSuccess) showNotification('加载热力图失败', 'error');
+    }
+}
+
+document.getElementById('loadHeatmap')?.addEventListener('click', async () => {
+    heatmapAutoRefresh = true;
+    await loadHeatmapData(true);
+});
+
+document.getElementById('heatmapType')?.addEventListener('change', async () => {
+    if (heatmapAutoRefresh && heatmapInstance) {
+        await loadHeatmapData(false);
     }
 });
 

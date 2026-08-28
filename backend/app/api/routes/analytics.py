@@ -37,7 +37,7 @@ def stop_heatmap(
     session: SessionDep,
     _user: AnalystOrAdmin,
     bbox: str = Query(description="min_lon,min_lat,max_lon,max_lat"),
-    grid_size_m: int = Query(default=300, ge=100, le=2000),
+    grid_size_m: int = Query(default=100, ge=50, le=2000),
 ) -> HeatmapResponse:
     return AnalyticsService(session).stop_heatmap(_bbox(bbox), grid_size_m)
 
@@ -47,7 +47,7 @@ def line_heatmap(
     session: SessionDep,
     _user: AnalystOrAdmin,
     bbox: str = Query(description="min_lon,min_lat,max_lon,max_lat"),
-    grid_size_m: int = Query(default=300, ge=100, le=2000),
+    grid_size_m: int = Query(default=100, ge=50, le=2000),
 ) -> HeatmapResponse:
     return AnalyticsService(session).line_heatmap(_bbox(bbox), grid_size_m)
 

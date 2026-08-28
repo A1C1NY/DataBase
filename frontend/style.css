@@ -558,6 +558,12 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* 热力图尽量填满当前窗口，避免控制栏下方留下大块空白。 */
+#heatmapContainer {
+    height: calc(100vh - 250px);
+    min-height: 500px;
+}
+
 /* 表格 */
 .data-table {
     width: 100%;
