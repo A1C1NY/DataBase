@@ -47,3 +47,26 @@ class StopViewDistributionResponse(AnalyticsSchema):
     bucket: DistributionBucket
     actor_scope: ActorScope
     items: list[DistributionItem]
+
+
+class LinePopularityItem(AnalyticsSchema):
+    line_id: int
+    line_name: str
+    detail_view_count: int = Field(description="线路详情访问次数")
+    unique_user_count: int
+
+
+class LinePopularityResponse(AnalyticsSchema):
+    data_source: Literal["database"] = "database"
+    metric_name: Literal["线路详情访问次数"] = "线路详情访问次数"
+    items: list[LinePopularityItem]
+
+
+class LineViewDistributionResponse(AnalyticsSchema):
+    data_source: Literal["database"] = "database"
+    metric_name: Literal["线路详情访问次数"] = "线路详情访问次数"
+    line_id: int
+    line_name: str
+    bucket: DistributionBucket
+    actor_scope: ActorScope
+    items: list[DistributionItem]

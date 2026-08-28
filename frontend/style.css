@@ -41,6 +41,11 @@ body {
     color: white;
 }
 
+.notification.warning {
+    background: #f59e0b;
+    color: #1f2937;
+}
+
 /* 头部 */
 .header {
     background: #1976d2;

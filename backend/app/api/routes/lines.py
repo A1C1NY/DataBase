@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, Query
 
+from app.api.dependencies import OptionalCurrentUser, SessionDep
 from app.core.config import get_settings
 from app.db.session import get_session_factory
 from app.integrations.amap.client import AmapClient
@@ -17,6 +18,7 @@ from app.services.on_demand_sync import (
     TransitUpstreamError,
 )
 from app.services.transit import TransitService
+from app.services.view_events import LineViewEventService
 
 router = APIRouter(prefix="/lines", tags=["lines"])
 
@@ -78,13 +80,11 @@ def get_line_by_amap(
 
 
 @router.get("/{line_id}", response_model=LineResponse)
-def get_line(line_id: int) -> LineResponse:
-    with get_session_factory()() as session:
-        transit = TransitService(session)
-        line = transit.get_line(line_id)
-        if line is None:
-            raise HTTPException(status_code=404, detail={"code": "NOT_FOUND", "message": "线路不存在"})
-        return transit.line_response(line, data_source="database")
+def get_line(line_id: int, session: SessionDep, user: OptionalCurrentUser) -> LineResponse:
+    line = LineViewEventService(session).open_line_detail(line_id, user=user)
+    if line is None:
+        raise HTTPException(status_code=404, detail={"code": "NOT_FOUND", "message": "线路不存在"})
+    return TransitService(session).line_response(line, data_source="database")
 
 
 @router.get("/{line_id}/stops", response_model=LineStopsResponse)

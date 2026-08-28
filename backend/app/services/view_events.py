@@ -2,8 +2,8 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.account import StopViewEvent, User
-from app.models.transit import BusStop
+from app.models.account import LineViewEvent, StopViewEvent, User
+from app.models.transit import BusLine, BusStop
 from app.schemas.events import StopViewActorRole, StopViewEntryPoint
 from app.services.transit import TransitService
 
@@ -42,3 +42,34 @@ class StopViewEventService:
             self.session.rollback()
             raise
         return stop
+
+
+class LineViewEventService:
+    """Keep a successful line detail read and its event write together."""
+
+    def __init__(self, session: Session) -> None:
+        self.session = session
+
+    def open_line_detail(
+        self,
+        line_id: int,
+        *,
+        entry_point: str = "direct",
+        user: User | None,
+    ) -> BusLine | None:
+        line = TransitService(self.session).get_line(line_id)
+        if line is None:
+            return None
+        event = LineViewEvent(
+            line_id=line.id,
+            entry_point=entry_point,
+            user_id=user.id if user is not None else None,
+            actor_role=user.role if user is not None else "anonymous",
+        )
+        self.session.add(event)
+        try:
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+        return line

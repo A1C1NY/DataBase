@@ -62,8 +62,22 @@ async def http_error(_request: Request, exc: HTTPException) -> JSONResponse:
 
 @app.exception_handler(RequestValidationError)
 async def validation_error(
-    _request: Request, exc: RequestValidationError
+    request: Request, exc: RequestValidationError
 ) -> JSONResponse:
+    password_error = any(
+        "password" in error.get("loc", ()) for error in exc.errors()
+    )
+    request_path = getattr(getattr(request, "url", None), "path", "")
+    if password_error and request_path.endswith("/auth/register"):
+        return JSONResponse(
+            content={
+                "detail": {
+                    "code": "PASSWORD_INVALID",
+                    "message": "密码不符合要求：长度必须为 8-128 个字符",
+                }
+            },
+            status_code=422,
+        )
     return JSONResponse(
         content={"detail": {"code": "INVALID_REQUEST", "message": "请求参数校验失败"}},
         status_code=422,

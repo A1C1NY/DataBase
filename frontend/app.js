@@ -37,7 +37,11 @@ async function apiRequest(endpoint, options = {}) {
             try {
                 const data = await response.json();
                 errorMessage = data.detail?.message || data.detail || data.message || errorMessage;
+                const error = new Error(errorMessage);
+                error.code = data.detail?.code;
+                throw error;
             } catch (e) {
+                if (e instanceof Error && e.code) throw e;
                 errorMessage = `HTTP ${response.status}: ${response.statusText}`;
             }
             throw new Error(errorMessage);
@@ -51,7 +55,10 @@ async function apiRequest(endpoint, options = {}) {
         const data = await response.json();
         return data;
     } catch (error) {
-        showNotification(error.message, 'error');
+        showNotification(
+            error.message,
+            error.code === 'PASSWORD_INVALID' ? 'warning' : 'error'
+        );
         throw error;
     }
 }
@@ -155,7 +162,8 @@ document.getElementById('authForm')?.addEventListener('submit', async (e) => {
             toggleAuthMode();
         }
     } catch (error) {
-        showNotification(error.message, 'error');
+        const isPasswordError = !isLogin && error.code === 'PASSWORD_INVALID';
+        showNotification(error.message, isPasswordError ? 'warning' : 'error');
     }
 });
 
@@ -1148,7 +1156,7 @@ document.getElementById('loadPopularity')?.addEventListener('click', async () =>
                         <tr>
                             <td>${idx + 1}</td>
                             <td>${stop.stop_name}</td>
-                            <td>${stop.view_count}</td>
+                            <td>${stop.detail_view_count ?? 0}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1158,14 +1166,38 @@ document.getElementById('loadPopularity')?.addEventListener('click', async () =>
     }
 });
 
+document.getElementById('loadLinePopularity')?.addEventListener('click', async () => {
+    const startTime = document.getElementById('linePopStartTime').value;
+    const endTime = document.getElementById('linePopEndTime').value;
+    const limit = document.getElementById('linePopLimit').value;
+    try {
+        const params = new URLSearchParams({ limit: limit || 20 });
+        if (startTime) params.append('start_at', startTime);
+        if (endTime) params.append('end_at', endTime);
+        const data = await apiRequest(`/analytics/lines/popularity?${params}`);
+        const lines = data.items || [];
+        document.getElementById('linePopularityResults').innerHTML = lines.length === 0
+            ? '<div class="empty-state">暂无数据</div>'
+            : `<div class="data-table"><table>
+                <thead><tr><th>排名</th><th>线路名称</th><th>线路详情访问次数</th></tr></thead>
+                <tbody>${lines.map((line, idx) => `
+                    <tr><td>${idx + 1}</td><td>${line.line_name}</td>
+                    <td>${line.detail_view_count ?? 0}</td></tr>`).join('')}</tbody>
+            </table></div>`;
+    } catch (error) {
+        document.getElementById('linePopularityResults').innerHTML = '<div class="empty-state">加载失败</div>';
+    }
+});
+
 document.getElementById('loadDistribution')?.addEventListener('click', async () => {
-    const stopId = document.getElementById('distStopId').value;
+    const targetType = document.getElementById('distTargetType').value;
+    const targetName = document.getElementById('distTargetName').value.trim();
     const startTime = document.getElementById('distStartTime').value;
     const endTime = document.getElementById('distEndTime').value;
     const bucket = document.getElementById('distBucket').value;
 
-    if (!stopId) {
-        showNotification('请输入站点ID', 'error');
+    if (!targetName) {
+        showNotification(`请输入${targetType === 'stop' ? '车站' : '线路'}名称`, 'error');
         return;
     }
 
@@ -1174,7 +1206,12 @@ document.getElementById('loadDistribution')?.addEventListener('click', async () 
         if (startTime) params.append('start_at', startTime);
         if (endTime) params.append('end_at', endTime);
 
-        const data = await apiRequest(`/analytics/stops/${stopId}/view-distribution?${params}`);
+        params.append('name', targetName);
+        if (targetType === 'line') params.append('actor_scope', 'all');
+        const endpoint = targetType === 'stop'
+            ? '/analytics/stops/view-distribution-by-name'
+            : '/analytics/lines/view-distribution-by-name';
+        const data = await apiRequest(`${endpoint}?${params}`);
         const distribution = data.items || data.distribution || data.data || [];
 
         document.getElementById('distributionResults').innerHTML = distribution.length === 0
@@ -1182,15 +1219,15 @@ document.getElementById('loadDistribution')?.addEventListener('click', async () 
             : `<div class="data-table"><table>
                 <thead>
                     <tr>
-                        <th>${bucket === 'hour' ? '小时' : bucket === 'date' ? '日期' : '星期'}</th>
+                        <th>${bucket === 'hour' ? '小时' : bucket === 'day' ? '日期' : '星期/小时'}</th>
                         <th>访问次数</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${distribution.map(item => `
                         <tr>
-                            <td>${item.bucket || item.time_bucket}</td>
-                            <td>${item.count || item.view_count}</td>
+                            <td>${item.bucket ?? item.time_bucket ?? ''}</td>
+                            <td>${item.detail_view_count ?? item.count ?? item.view_count ?? 0}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1198,6 +1235,11 @@ document.getElementById('loadDistribution')?.addEventListener('click', async () 
     } catch (error) {
         document.getElementById('distributionResults').innerHTML = '<div class="empty-state">加载失败</div>';
     }
+});
+
+document.getElementById('distTargetType')?.addEventListener('change', (event) => {
+    const input = document.getElementById('distTargetName');
+    input.placeholder = event.target.value === 'stop' ? '输入车站名称' : '输入线路名称';
 });
 
 // 用户管理

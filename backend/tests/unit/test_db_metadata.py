@@ -14,6 +14,7 @@ EXPECTED_TABLES = {
     "favorite_stops",
     "ingestion_runs",
     "stop_view_events",
+    "line_view_events",
     "users",
 }
 
@@ -97,6 +98,14 @@ EXPECTED_COLUMNS = {
         "entry_point",
         "viewed_at",
     },
+    "line_view_events": {
+        "id",
+        "user_id",
+        "actor_role",
+        "line_id",
+        "entry_point",
+        "viewed_at",
+    },
     "ingestion_runs": {
         "id",
         "endpoint",
@@ -147,6 +156,7 @@ EXPECTED_NULLABLE_COLUMNS = {
     "favorite_stops": set(),
     "favorite_lines": set(),
     "stop_view_events": {"user_id"},
+    "line_view_events": {"user_id"},
     "ingestion_runs": {
         "request_keyword",
         "city_code",
@@ -164,6 +174,7 @@ EXPECTED_PRIMARY_KEYS = {
     "favorite_stops": ("user_id", "stop_id"),
     "favorite_lines": ("user_id", "line_id"),
     "stop_view_events": ("id",),
+    "line_view_events": ("id",),
     "ingestion_runs": ("id",),
 }
 
@@ -186,6 +197,11 @@ EXPECTED_INDEXES = {
         "idx_stop_view_events_stop_time",
         "idx_stop_view_events_role_time",
         "idx_stop_view_events_time",
+    },
+    "line_view_events": {
+        "idx_line_view_events_line_time",
+        "idx_line_view_events_role_time",
+        "idx_line_view_events_time",
     },
     "ingestion_runs": {
         "idx_ingestion_runs_status_started",

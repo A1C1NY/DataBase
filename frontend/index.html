@@ -117,6 +117,7 @@
                 <h2>访问统计分析</h2>
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="popularity">站点访问排行</button>
+                    <button class="tab-btn" data-tab="linePopularity">线路访问排行</button>
                     <button class="tab-btn" data-tab="distribution">访问时间分布</button>
                 </div>
 
@@ -130,15 +131,29 @@
                     <div id="popularityResults"></div>
                 </div>
 
+                <div id="linePopularity" class="tab-content">
+                    <div class="controls">
+                        <input type="datetime-local" id="linePopStartTime">
+                        <input type="datetime-local" id="linePopEndTime">
+                        <input type="number" id="linePopLimit" placeholder="数量" value="20" min="1" max="100">
+                        <button id="loadLinePopularity" class="btn btn-primary">查询</button>
+                    </div>
+                    <div id="linePopularityResults"></div>
+                </div>
+
                 <div id="distribution" class="tab-content">
                     <div class="controls">
-                        <input type="number" id="distStopId" placeholder="站点ID" required>
+                        <select id="distTargetType">
+                            <option value="stop">车站名称</option>
+                            <option value="line">线路名称</option>
+                        </select>
+                        <input type="text" id="distTargetName" placeholder="输入车站名称" required>
                         <input type="datetime-local" id="distStartTime">
                         <input type="datetime-local" id="distEndTime">
                         <select id="distBucket">
                             <option value="hour">按小时</option>
-                            <option value="date">按日期</option>
-                            <option value="weekday">按星期</option>
+                            <option value="day">按日期</option>
+                            <option value="weekday_hour">按星期/小时</option>
                         </select>
                         <button id="loadDistribution" class="btn btn-primary">查询</button>
                     </div>

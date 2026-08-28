@@ -28,7 +28,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import BIGINT_UNSIGNED, MYSQL_TABLE_OPTIONS, Base, TimestampMixin
 
 if TYPE_CHECKING:
-    from app.models.account import FavoriteLine, FavoriteStop, StopViewEvent
+    from app.models.account import FavoriteLine, FavoriteStop, LineViewEvent, StopViewEvent
     from app.models.ingestion import IngestionRun
 
 
@@ -142,6 +142,7 @@ class BusLine(TimestampMixin, Base):
         back_populates="line", cascade="all, delete-orphan"
     )
     favorite_lines: Mapped[list["FavoriteLine"]] = relationship(back_populates="line")
+    view_events: Mapped[list["LineViewEvent"]] = relationship(back_populates="line")
     last_ingestion_run: Mapped["IngestionRun | None"] = relationship(
         back_populates="last_modified_lines"
     )

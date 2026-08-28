@@ -41,6 +41,9 @@ class User(TimestampMixin, Base):
     view_events: Mapped[list["StopViewEvent"]] = relationship(
         back_populates="user", passive_deletes=True
     )
+    line_view_events: Mapped[list["LineViewEvent"]] = relationship(
+        back_populates="user", passive_deletes=True
+    )
 
 
 class FavoriteStop(Base):
@@ -149,3 +152,39 @@ class StopViewEvent(Base):
 
     user: Mapped[User | None] = relationship(back_populates="view_events")
     stop: Mapped["BusStop"] = relationship(back_populates="view_events")
+
+
+class LineViewEvent(Base):
+    """A successful bus-line detail view."""
+
+    __tablename__ = "line_view_events"
+    __table_args__ = (
+        Index("idx_line_view_events_line_time", "line_id", "viewed_at"),
+        Index("idx_line_view_events_role_time", "actor_role", "viewed_at"),
+        Index("idx_line_view_events_time", "viewed_at"),
+        MYSQL_TABLE_OPTIONS,
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_UNSIGNED, primary_key=True, autoincrement=True)
+    user_id: Mapped[int | None] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey("users.id", onupdate="RESTRICT", ondelete="SET NULL"),
+        nullable=True,
+    )
+    actor_role: Mapped[str] = mapped_column(
+        ENUM("anonymous", "passenger", "analyst", "admin"), nullable=False
+    )
+    line_id: Mapped[int] = mapped_column(
+        BIGINT_UNSIGNED,
+        ForeignKey("bus_lines.id", onupdate="RESTRICT", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    entry_point: Mapped[str] = mapped_column(
+        ENUM("search", "favorite", "direct"), nullable=False
+    )
+    viewed_at: Mapped[datetime] = mapped_column(
+        DATETIME(fsp=3), nullable=False, server_default=text("CURRENT_TIMESTAMP(3)")
+    )
+
+    user: Mapped[User | None] = relationship(back_populates="line_view_events")
+    line: Mapped["BusLine"] = relationship(back_populates="view_events")

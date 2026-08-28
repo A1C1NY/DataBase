@@ -12,7 +12,7 @@ from app.core.time import SHANGHAI_TZ, to_mysql_datetime
 from app.geo.coord import gcj02_to_wgs84
 from app.geo.geojson import feature_collection, point_feature
 from app.geo.grid import BoundingBox, grid_center, grid_key, sample_segment
-from app.models.account import StopViewEvent
+from app.models.account import LineViewEvent, StopViewEvent
 from app.models.transit import BusLine, BusLinePathPoint, BusStop
 from app.schemas.analytics import (
     ActorScope,
@@ -22,6 +22,9 @@ from app.schemas.analytics import (
     HeatmapResponse,
     StopPopularityItem,
     StopPopularityResponse,
+    LinePopularityItem,
+    LinePopularityResponse,
+    LineViewDistributionResponse,
     StopViewDistributionResponse,
 )
 
@@ -135,23 +138,20 @@ class AnalyticsService:
         return self._heatmap_response(counts, bbox=bbox, grid_size_m=grid_size_m, metric="line_density")
 
     def stop_popularity(
-        self, start_at: datetime, end_at: datetime, limit: int
+        self, start_at: datetime, end_at: datetime, limit: int, actor_scope: ActorScope = "all"
     ) -> StopPopularityResponse:
         start, end = normalize_range(start_at, end_at)
+        conditions = [
+            BusStop.is_active.is_(True),
+            StopViewEvent.viewed_at >= start,
+            StopViewEvent.viewed_at < end,
+        ]
+        if actor_scope == "passenger":
+            conditions.append(StopViewEvent.actor_role == "passenger")
         rows = self.session.execute(
-            select(
-                BusStop.id,
-                BusStop.stop_name,
-                func.count(StopViewEvent.id),
-                func.count(distinct(StopViewEvent.user_id)),
-            )
+            select(BusStop.id, BusStop.stop_name, func.count(StopViewEvent.id), func.count(distinct(StopViewEvent.user_id)))
             .join(StopViewEvent, StopViewEvent.stop_id == BusStop.id)
-            .where(
-                BusStop.is_active.is_(True),
-                StopViewEvent.actor_role == "passenger",
-                StopViewEvent.viewed_at >= start,
-                StopViewEvent.viewed_at < end,
-            )
+            .where(*conditions)
             .group_by(BusStop.id, BusStop.stop_name)
             .order_by(func.count(StopViewEvent.id).desc(), BusStop.id)
             .limit(limit)
@@ -197,6 +197,80 @@ class AnalyticsService:
             bucket=bucket,
             actor_scope=actor_scope,
             items=items,
+        )
+
+    def line_popularity(
+        self, start_at: datetime, end_at: datetime, limit: int, actor_scope: ActorScope = "all"
+    ) -> LinePopularityResponse:
+        start, end = normalize_range(start_at, end_at)
+        rows = self.session.execute(
+            select(
+                BusLine.id,
+                BusLine.line_name,
+                func.count(LineViewEvent.id),
+                func.count(distinct(LineViewEvent.user_id)),
+            )
+            .join(LineViewEvent, LineViewEvent.line_id == BusLine.id)
+            .where(BusLine.is_active.is_(True), LineViewEvent.viewed_at >= start, LineViewEvent.viewed_at < end)
+            .group_by(BusLine.id, BusLine.line_name)
+            .order_by(func.count(LineViewEvent.id).desc(), BusLine.id)
+            .limit(limit)
+        )
+        if actor_scope == "passenger":
+            rows = self.session.execute(
+                select(
+                    BusLine.id, BusLine.line_name, func.count(LineViewEvent.id),
+                    func.count(distinct(LineViewEvent.user_id)),
+                )
+                .join(LineViewEvent, LineViewEvent.line_id == BusLine.id)
+                .where(
+                    BusLine.is_active.is_(True), LineViewEvent.actor_role == "passenger",
+                    LineViewEvent.viewed_at >= start, LineViewEvent.viewed_at < end,
+                )
+                .group_by(BusLine.id, BusLine.line_name)
+                .order_by(func.count(LineViewEvent.id).desc(), BusLine.id)
+                .limit(limit)
+            )
+        return LinePopularityResponse(
+            items=[
+                LinePopularityItem(
+                    line_id=line_id,
+                    line_name=line_name,
+                    detail_view_count=view_count,
+                    unique_user_count=unique_users,
+                )
+                for line_id, line_name, view_count, unique_users in rows
+            ]
+        )
+
+    def line_view_distribution(
+        self,
+        line_id: int,
+        start_at: datetime,
+        end_at: datetime,
+        bucket: DistributionBucket,
+        actor_scope: ActorScope,
+    ) -> LineViewDistributionResponse | None:
+        line = self.session.scalar(
+            select(BusLine).where(BusLine.id == line_id, BusLine.is_active.is_(True))
+        )
+        if line is None:
+            return None
+        start, end = normalize_range(start_at, end_at)
+        statement = select(LineViewEvent.viewed_at).where(
+            LineViewEvent.line_id == line_id,
+            LineViewEvent.viewed_at >= start,
+            LineViewEvent.viewed_at < end,
+        )
+        if actor_scope == "passenger":
+            statement = statement.where(LineViewEvent.actor_role == "passenger")
+        viewed_times = list(self.session.scalars(statement))
+        return LineViewDistributionResponse(
+            line_id=line.id,
+            line_name=line.line_name,
+            bucket=bucket,
+            actor_scope=actor_scope,
+            items=_distribution_items(viewed_times, start, end, bucket),
         )
 
 

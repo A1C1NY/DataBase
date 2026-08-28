@@ -11,8 +11,9 @@ def test_alembic_revision_chain_has_expected_head() -> None:
     script = ScriptDirectory.from_config(config)
     revisions = list(script.walk_revisions())
 
-    assert script.get_heads() == ["20260806_04"]
+    assert script.get_heads() == ["20260828_01"]
     assert [revision.revision for revision in revisions] == [
+        "20260828_01",
         "20260806_04",
         "20260806_03",
         "20260806_02",
