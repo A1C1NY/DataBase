@@ -35,6 +35,10 @@ def test_defaults_match_project_contract() -> None:
     assert settings.debug is False
     assert settings.jwt_expire_minutes == 30
     assert settings.upstream_timeout_seconds == 10
+    assert settings.amap_min_request_interval_seconds == 1.0
+    assert settings.amap_line_id_min_request_interval_seconds == 0.04
+    assert settings.amap_rate_limit_retries == 3
+    assert settings.amap_rate_limit_backoff_seconds == 0.5
     assert settings.city_code == "021"
     assert str(settings.amap_api_url) == "https://restapi.amap.com/"
     assert settings.cors_origin_strings == ["http://localhost:5173"]
