@@ -1549,7 +1549,7 @@ async function loadUsers() {
                         <td>${user.username}</td>
                         <td>${getRoleName(user.role)}</td>
                         <td>${user.is_active ? '启用' : '停用'}</td>
-                        <td>${new Date(user.created_at).toLocaleString('zh-CN')}</td>
+                        <td>${user.created_at ? new Date(user.created_at).toLocaleString('zh-CN') : '-'}</td>
                         <td>
                             <button class="btn btn-secondary" onclick="toggleUserStatus(${user.id}, ${user.is_active})">
                                 ${user.is_active ? '停用' : '启用'}

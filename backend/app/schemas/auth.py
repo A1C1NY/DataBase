@@ -27,6 +27,9 @@ class UserResponse(BaseModel):
     username: str
     role: Role
     is_active: bool
+    # Database-backed users always have this value; the default keeps transient
+    # ORM instances (before refresh) serializable in internal flows/tests.
+    created_at: datetime | None = None
 
 
 class TokenResponse(BaseModel):
