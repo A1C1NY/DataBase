@@ -128,7 +128,16 @@
                         <input type="number" id="popLimit" placeholder="数量" value="20" min="1" max="100">
                         <button id="loadPopularity" class="btn btn-primary">查询</button>
                     </div>
-                    <div id="popularityResults"></div>
+                    <div class="analytics-view-header">
+                        <div class="view-switch" data-target="popularityResults">
+                            <button class="view-switch-btn active" data-view="chart">图表</button>
+                            <button class="view-switch-btn" data-view="table">表格</button>
+                        </div>
+                    </div>
+                    <div id="popularityResults" class="analytics-results">
+                        <div class="analytics-chart" data-result-view="chart"><div class="empty-state">请设置查询条件后查询</div></div>
+                        <div data-result-view="table" hidden><div class="empty-state">请设置查询条件后查询</div></div>
+                    </div>
                 </div>
 
                 <div id="linePopularity" class="tab-content">
@@ -138,7 +147,16 @@
                         <input type="number" id="linePopLimit" placeholder="数量" value="20" min="1" max="100">
                         <button id="loadLinePopularity" class="btn btn-primary">查询</button>
                     </div>
-                    <div id="linePopularityResults"></div>
+                    <div class="analytics-view-header">
+                        <div class="view-switch" data-target="linePopularityResults">
+                            <button class="view-switch-btn active" data-view="chart">图表</button>
+                            <button class="view-switch-btn" data-view="table">表格</button>
+                        </div>
+                    </div>
+                    <div id="linePopularityResults" class="analytics-results">
+                        <div class="analytics-chart" data-result-view="chart"><div class="empty-state">请设置查询条件后查询</div></div>
+                        <div data-result-view="table" hidden><div class="empty-state">请设置查询条件后查询</div></div>
+                    </div>
                 </div>
 
                 <div id="distribution" class="tab-content">
@@ -157,7 +175,16 @@
                         </select>
                         <button id="loadDistribution" class="btn btn-primary">查询</button>
                     </div>
-                    <div id="distributionResults"></div>
+                    <div class="analytics-view-header">
+                        <div class="view-switch" data-target="distributionResults">
+                            <button class="view-switch-btn active" data-view="chart">图表</button>
+                            <button class="view-switch-btn" data-view="table">表格</button>
+                        </div>
+                    </div>
+                    <div id="distributionResults" class="analytics-results">
+                        <div class="analytics-chart" data-result-view="chart"><div class="empty-state">请输入名称并查询</div></div>
+                        <div data-result-view="table" hidden><div class="empty-state">请输入名称并查询</div></div>
+                    </div>
                 </div>
             </div>
 
@@ -231,6 +258,7 @@
     </div>
 
     <script src="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

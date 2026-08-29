@@ -272,6 +272,9 @@ function loadPageData(page) {
                 setTimeout(() => heatmapInstance.resize(), 0);
             }
             break;
+        case 'analytics':
+            initializeAnalyticsTimeRange();
+            break;
         case 'admin':
             loadUsers();
             break;
@@ -279,6 +282,44 @@ function loadPageData(page) {
             loadIngestionRuns();
             break;
     }
+}
+
+function formatLocalDateTime(date) {
+    const pad = value => String(value).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+        + `T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function initializeAnalyticsTimeRange() {
+    const now = new Date();
+    const start = new Date(now);
+    const originalDay = start.getDate();
+
+    // Move to the target month first, then clamp dates such as March 31 to February 28/29.
+    start.setDate(1);
+    start.setMonth(start.getMonth() - 1);
+    const lastDayOfTargetMonth = new Date(
+        start.getFullYear(),
+        start.getMonth() + 1,
+        0
+    ).getDate();
+    start.setDate(Math.min(originalDay, lastDayOfTargetMonth));
+    start.setHours(0, 0, 0, 0);
+
+    const startValue = formatLocalDateTime(start);
+    const endValue = formatLocalDateTime(now);
+    const inputPairs = [
+        ['popStartTime', 'popEndTime'],
+        ['linePopStartTime', 'linePopEndTime'],
+        ['distStartTime', 'distEndTime']
+    ];
+
+    inputPairs.forEach(([startId, endId]) => {
+        const startInput = document.getElementById(startId);
+        const endInput = document.getElementById(endId);
+        if (startInput && !startInput.value) startInput.value = startValue;
+        if (endInput && !endInput.value) endInput.value = endValue;
+    });
 }
 
 // 标签页切换
@@ -1232,11 +1273,165 @@ document.getElementById('heatmapType')?.addEventListener('change', async () => {
 });
 
 // 访问统计
+const analyticsCharts = new Map();
+
+function getAnalyticsViews(resultId) {
+    const result = document.getElementById(resultId);
+    return {
+        chart: result.querySelector('[data-result-view="chart"]'),
+        table: result.querySelector('[data-result-view="table"]')
+    };
+}
+
+function disposeAnalyticsChart(resultId) {
+    const chart = analyticsCharts.get(resultId);
+    if (chart) chart.dispose();
+    analyticsCharts.delete(resultId);
+}
+
+function setAnalyticsState(resultId, message, className) {
+    disposeAnalyticsChart(resultId);
+    const views = getAnalyticsViews(resultId);
+    views.chart.innerHTML = `<div class="${className}">${message}</div>`;
+    views.table.innerHTML = `<div class="${className}">${message}</div>`;
+}
+
+function createAnalyticsChart(resultId, option, height = 420) {
+    const views = getAnalyticsViews(resultId);
+    disposeAnalyticsChart(resultId);
+    views.chart.innerHTML = '';
+    views.chart.style.height = `${height}px`;
+
+    if (typeof echarts === 'undefined') {
+        views.chart.innerHTML = '<div class="empty-state">图表组件加载失败，请切换到表格查看</div>';
+        return;
+    }
+
+    const chart = echarts.init(views.chart);
+    chart.setOption(option);
+    analyticsCharts.set(resultId, chart);
+}
+
+function renderRankingResults(resultId, items, nameKey, nameLabel, countLabel) {
+    if (!items.length) {
+        setAnalyticsState(resultId, '暂无数据', 'empty-state');
+        return;
+    }
+
+    const views = getAnalyticsViews(resultId);
+    views.table.innerHTML = `<div class="data-table"><table>
+        <thead><tr><th>排名</th><th>${nameLabel}</th><th>${countLabel}</th></tr></thead>
+        <tbody>${items.map((item, index) => `
+            <tr><td>${index + 1}</td><td>${item[nameKey]}</td>
+            <td>${item.detail_view_count ?? 0}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+
+    const names = items.map(item => item[nameKey]);
+    const counts = items.map(item => item.detail_view_count ?? 0);
+    createAnalyticsChart(resultId, {
+        color: ['#1976d2'],
+        grid: { top: 24, right: 72, bottom: 36, left: 24, containLabel: true },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => `${params[0].name}<br>${countLabel}：${params[0].value}`
+        },
+        xAxis: {
+            type: 'value',
+            minInterval: 1,
+            name: '访问次数',
+            splitLine: { lineStyle: { color: '#edf0f3' } }
+        },
+        yAxis: {
+            type: 'category',
+            inverse: true,
+            data: names,
+            axisLabel: { width: 180, overflow: 'truncate' },
+            axisTick: { show: false }
+        },
+        series: [{
+            type: 'bar',
+            data: counts,
+            barMaxWidth: 22,
+            label: { show: true, position: 'right', color: '#444' },
+            emphasis: { itemStyle: { color: '#125ca6' } }
+        }]
+    }, Math.max(420, items.length * 34 + 90));
+}
+
+function renderDistributionResults(items, bucket) {
+    const resultId = 'distributionResults';
+    if (!items.length) {
+        setAnalyticsState(resultId, '暂无数据', 'empty-state');
+        return;
+    }
+
+    const bucketLabel = bucket === 'hour' ? '小时' : bucket === 'day' ? '日期' : '星期/小时';
+    const views = getAnalyticsViews(resultId);
+    views.table.innerHTML = `<div class="data-table"><table>
+        <thead><tr><th>${bucketLabel}</th><th>访问次数</th></tr></thead>
+        <tbody>${items.map(item => `<tr>
+            <td>${item.bucket ?? item.time_bucket ?? ''}</td>
+            <td>${item.detail_view_count ?? item.count ?? item.view_count ?? 0}</td>
+        </tr>`).join('')}</tbody>
+    </table></div>`;
+
+    if (bucket === 'weekday_hour') {
+        const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        const heatmapData = items.map(item => {
+            const [weekday, hour] = String(item.bucket).split('-').map(Number);
+            return [hour, weekday, item.detail_view_count ?? 0];
+        });
+        const maxValue = Math.max(1, ...heatmapData.map(item => item[2]));
+        createAnalyticsChart(resultId, {
+            tooltip: { formatter: params => `${weekdays[params.value[1]]} ${String(params.value[0]).padStart(2, '0')}:00<br>访问次数：${params.value[2]}` },
+            grid: { top: 24, right: 42, bottom: 76, left: 64 },
+            xAxis: { type: 'category', data: Array.from({ length: 24 }, (_, hour) => `${String(hour).padStart(2, '0')}:00`), splitArea: { show: true } },
+            yAxis: { type: 'category', data: weekdays, splitArea: { show: true } },
+            visualMap: { min: 0, max: maxValue, calculable: true, orient: 'horizontal', left: 'center', bottom: 8, inRange: { color: ['#edf5fd', '#78b4e8', '#1976d2'] } },
+            series: [{ type: 'heatmap', data: heatmapData, emphasis: { itemStyle: { borderColor: '#333', borderWidth: 1 } } }]
+        });
+        return;
+    }
+
+    const labels = items.map(item => bucket === 'hour'
+        ? `${String(item.bucket).padStart(2, '0')}:00`
+        : String(item.bucket));
+    const counts = items.map(item => item.detail_view_count ?? item.count ?? item.view_count ?? 0);
+    createAnalyticsChart(resultId, {
+        color: ['#1976d2'],
+        grid: { top: 30, right: 36, bottom: 62, left: 58 },
+        tooltip: { trigger: 'axis' },
+        xAxis: { type: 'category', data: labels, axisLabel: { rotate: bucket === 'day' ? 35 : 0, hideOverlap: true } },
+        yAxis: { type: 'value', minInterval: 1, name: '访问次数', splitLine: { lineStyle: { color: '#edf0f3' } } },
+        series: [{ type: 'line', data: counts, smooth: true, symbolSize: 7, areaStyle: { color: 'rgba(25, 118, 210, 0.12)' } }]
+    });
+}
+
+document.querySelectorAll('.view-switch').forEach(viewSwitch => {
+    viewSwitch.addEventListener('click', event => {
+        const button = event.target.closest('.view-switch-btn');
+        if (!button) return;
+        viewSwitch.querySelectorAll('.view-switch-btn').forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+        const views = getAnalyticsViews(viewSwitch.dataset.target);
+        const showChart = button.dataset.view === 'chart';
+        views.chart.hidden = !showChart;
+        views.table.hidden = showChart;
+        if (showChart) analyticsCharts.get(viewSwitch.dataset.target)?.resize();
+    });
+});
+
+window.addEventListener('resize', () => {
+    analyticsCharts.forEach(chart => chart.resize());
+});
+
 document.getElementById('loadPopularity')?.addEventListener('click', async () => {
     const startTime = document.getElementById('popStartTime').value;
     const endTime = document.getElementById('popEndTime').value;
     const limit = document.getElementById('popLimit').value;
 
+    setAnalyticsState('popularityResults', '正在加载', 'loading');
     try {
         const params = new URLSearchParams({ limit: limit || 20 });
         if (startTime) params.append('start_at', startTime);
@@ -1245,28 +1440,9 @@ document.getElementById('loadPopularity')?.addEventListener('click', async () =>
         const data = await apiRequest(`/analytics/stops/popularity?${params}`);
         const stops = data.items || data.stops || data.data || [];
 
-        document.getElementById('popularityResults').innerHTML = stops.length === 0
-            ? '<div class="empty-state">暂无数据</div>'
-            : `<div class="data-table"><table>
-                <thead>
-                    <tr>
-                        <th>排名</th>
-                        <th>站点名称</th>
-                        <th>站点详情访问次数</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${stops.map((stop, idx) => `
-                        <tr>
-                            <td>${idx + 1}</td>
-                            <td>${stop.stop_name}</td>
-                            <td>${stop.detail_view_count ?? 0}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table></div>`;
+        renderRankingResults('popularityResults', stops, 'stop_name', '站点名称', '站点详情访问次数');
     } catch (error) {
-        document.getElementById('popularityResults').innerHTML = '<div class="empty-state">加载失败</div>';
+        setAnalyticsState('popularityResults', '加载失败', 'empty-state');
     }
 });
 
@@ -1274,22 +1450,16 @@ document.getElementById('loadLinePopularity')?.addEventListener('click', async (
     const startTime = document.getElementById('linePopStartTime').value;
     const endTime = document.getElementById('linePopEndTime').value;
     const limit = document.getElementById('linePopLimit').value;
+    setAnalyticsState('linePopularityResults', '正在加载', 'loading');
     try {
         const params = new URLSearchParams({ limit: limit || 20 });
         if (startTime) params.append('start_at', startTime);
         if (endTime) params.append('end_at', endTime);
         const data = await apiRequest(`/analytics/lines/popularity?${params}`);
         const lines = data.items || [];
-        document.getElementById('linePopularityResults').innerHTML = lines.length === 0
-            ? '<div class="empty-state">暂无数据</div>'
-            : `<div class="data-table"><table>
-                <thead><tr><th>排名</th><th>线路名称</th><th>线路详情访问次数</th></tr></thead>
-                <tbody>${lines.map((line, idx) => `
-                    <tr><td>${idx + 1}</td><td>${line.line_name}</td>
-                    <td>${line.detail_view_count ?? 0}</td></tr>`).join('')}</tbody>
-            </table></div>`;
+        renderRankingResults('linePopularityResults', lines, 'line_name', '线路名称', '线路详情访问次数');
     } catch (error) {
-        document.getElementById('linePopularityResults').innerHTML = '<div class="empty-state">加载失败</div>';
+        setAnalyticsState('linePopularityResults', '加载失败', 'empty-state');
     }
 });
 
@@ -1305,6 +1475,7 @@ document.getElementById('loadDistribution')?.addEventListener('click', async () 
         return;
     }
 
+    setAnalyticsState('distributionResults', '正在加载', 'loading');
     try {
         const params = new URLSearchParams({ bucket });
         if (startTime) params.append('start_at', startTime);
@@ -1318,26 +1489,9 @@ document.getElementById('loadDistribution')?.addEventListener('click', async () 
         const data = await apiRequest(`${endpoint}?${params}`);
         const distribution = data.items || data.distribution || data.data || [];
 
-        document.getElementById('distributionResults').innerHTML = distribution.length === 0
-            ? '<div class="empty-state">暂无数据</div>'
-            : `<div class="data-table"><table>
-                <thead>
-                    <tr>
-                        <th>${bucket === 'hour' ? '小时' : bucket === 'day' ? '日期' : '星期/小时'}</th>
-                        <th>访问次数</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${distribution.map(item => `
-                        <tr>
-                            <td>${item.bucket ?? item.time_bucket ?? ''}</td>
-                            <td>${item.detail_view_count ?? item.count ?? item.view_count ?? 0}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table></div>`;
+        renderDistributionResults(distribution, bucket);
     } catch (error) {
-        document.getElementById('distributionResults').innerHTML = '<div class="empty-state">加载失败</div>';
+        setAnalyticsState('distributionResults', '加载失败', 'empty-state');
     }
 });
 
