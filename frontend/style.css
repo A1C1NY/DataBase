@@ -652,6 +652,24 @@ body {
     background: #f9f9f9;
 }
 
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.user-role-select {
+    min-width: 92px;
+    padding: 7px 28px 7px 9px;
+    border: 1px solid #c7c7c7;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 /* 表单 */
 #userForm input, #userForm select {
     width: 100%;

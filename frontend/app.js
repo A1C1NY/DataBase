@@ -1530,7 +1530,7 @@ document.getElementById('createUserBtn')?.addEventListener('click', () => {
 
 async function loadUsers() {
     try {
-        const data = await apiRequest('/admin/users?limit=100');
+        const data = await apiRequest('/admin/users?page_size=100');
         const users = data.items || data.users || data.data || [];
 
         document.getElementById('usersTable').innerHTML = `<div class="data-table"><table>
@@ -1550,10 +1550,16 @@ async function loadUsers() {
                         <td>${getRoleName(user.role)}</td>
                         <td>${user.is_active ? '启用' : '停用'}</td>
                         <td>${user.created_at ? new Date(user.created_at).toLocaleString('zh-CN') : '-'}</td>
-                        <td>
+                        <td class="user-actions">
                             <button class="btn btn-secondary" onclick="toggleUserStatus(${user.id}, ${user.is_active})">
                                 ${user.is_active ? '停用' : '启用'}
                             </button>
+                            <select class="user-role-select" aria-label="设置${user.username}的角色"
+                                    onchange="changeUserRole(${user.id}, this.value, '${user.role}')">
+                                <option value="passenger" ${user.role === 'passenger' ? 'selected' : ''}>普通用户</option>
+                                <option value="analyst" ${user.role === 'analyst' ? 'selected' : ''}>分析师</option>
+                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>管理员</option>
+                            </select>
                         </td>
                     </tr>
                 `).join('')}
@@ -1575,6 +1581,22 @@ async function toggleUserStatus(userId, isActive) {
         loadUsers();
     } catch (error) {
         // Error already shown
+    }
+}
+
+async function changeUserRole(userId, role, previousRole) {
+    if (role === previousRole) return;
+    try {
+        await apiRequest(`/admin/users/${userId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ role })
+        });
+
+        showNotification('用户角色更新成功', 'success');
+        loadUsers();
+    } catch (error) {
+        // Reload to restore the server-side role after a rejected update.
+        loadUsers();
     }
 }
 
